@@ -31,7 +31,7 @@
 /* ============================================================================ */
 
 /******************************************************************************/
-/* lnk_cc430f5123.cmd - LINKER COMMAND FILE FOR LINKING CC430F5123 PROGRAMS     */
+/* lnk_msp430f5529.cmd - LINKER COMMAND FILE FOR LINKING MSP430F5529 PROGRAMS     */
 /*                                                                            */
 /*   Usage:  lnk430 <obj files...>    -o <out file> -m <map file> lnk.cmd     */
 /*           cl430  <src files...> -z -o <out file> -m <map file> lnk.cmd     */
@@ -56,12 +56,14 @@ MEMORY
     SFR                     : origin = 0x0000, length = 0x0010
     PERIPHERALS_8BIT        : origin = 0x0010, length = 0x00F0
     PERIPHERALS_16BIT       : origin = 0x0100, length = 0x0100
-    RAM                     : origin = 0x1C00, length = 0x07FE
+    RAM                     : origin = 0x2400, length = 0x2000
+    USBRAM                  : origin = 0x1C00, length = 0x0800
     INFOA                   : origin = 0x1980, length = 0x0080
     INFOB                   : origin = 0x1900, length = 0x0080
     INFOC                   : origin = 0x1880, length = 0x0080
     INFOD                   : origin = 0x1800, length = 0x0080
-    FLASH                   : origin = 0xE000, length = 0x1F80
+    FLASH                   : origin = 0x4400, length = 0xBB80
+    FLASH2                  : origin = 0x10000,length = 0x143F8 /* Boundaries changed to fix CPU47 */
     INT00                   : origin = 0xFF80, length = 0x0002
     INT01                   : origin = 0xFF82, length = 0x0002
     INT02                   : origin = 0xFF84, length = 0x0002
@@ -140,9 +142,18 @@ SECTIONS
     .sysmem     : {} > RAM                  /* Dynamic memory allocation area    */
     .stack      : {} > RAM (HIGH)           /* Software system stack             */
 
+#ifndef __LARGE_CODE_MODEL__
     .text       : {} > FLASH                /* Code                              */
+#else
+    .text       : {} >> FLASH2 | FLASH      /* Code                              */
+#endif
+    .text:_isr  : {} > FLASH                /* ISR Code space                    */
     .cinit      : {} > FLASH                /* Initialization tables             */
+#ifndef __LARGE_DATA_MODEL__
     .const      : {} > FLASH                /* Constant data                     */
+#else
+    .const      : {} >> FLASH | FLASH2      /* Constant data                     */
+#endif
     .cio        : {} > RAM                  /* C I/O Buffer                      */
 
     .pinit      : {} > FLASH                /* C++ Constructor tables            */
@@ -207,25 +218,25 @@ SECTIONS
     .int38       : {}               > INT38
     .int39       : {}               > INT39
     .int40       : {}               > INT40
-    .int41       : {}               > INT41
-    .int42       : {}               > INT42
-    .int43       : {}               > INT43
-    .int44       : {}               > INT44
-    AES          : { * ( .int45 ) } > INT45 type = VECT_INIT
-    RTC          : { * ( .int46 ) } > INT46 type = VECT_INIT
-    .int47       : {}               > INT47
-    PORT2        : { * ( .int48 ) } > INT48 type = VECT_INIT
-    PORT1        : { * ( .int49 ) } > INT49 type = VECT_INIT
-    TIMER1_A1    : { * ( .int50 ) } > INT50 type = VECT_INIT
-    TIMER1_A0    : { * ( .int51 ) } > INT51 type = VECT_INIT
-    DMA          : { * ( .int52 ) } > INT52 type = VECT_INIT
-    CC1101       : { * ( .int53 ) } > INT53 type = VECT_INIT
-    TIMER0_A1    : { * ( .int54 ) } > INT54 type = VECT_INIT
-    TIMER0_A0    : { * ( .int55 ) } > INT55 type = VECT_INIT
-    ADC10        : { * ( .int56 ) } > INT56 type = VECT_INIT
-    USCI_B0      : { * ( .int57 ) } > INT57 type = VECT_INIT
-    USCI_A0      : { * ( .int58 ) } > INT58 type = VECT_INIT
-    WDT          : { * ( .int59 ) } > INT59 type = VECT_INIT
+    RTC          : { * ( .int41 ) } > INT41 type = VECT_INIT
+    PORT2        : { * ( .int42 ) } > INT42 type = VECT_INIT
+    TIMER2_A1    : { * ( .int43 ) } > INT43 type = VECT_INIT
+    TIMER2_A0    : { * ( .int44 ) } > INT44 type = VECT_INIT
+    USCI_B1      : { * ( .int45 ) } > INT45 type = VECT_INIT
+    USCI_A1      : { * ( .int46 ) } > INT46 type = VECT_INIT
+    PORT1        : { * ( .int47 ) } > INT47 type = VECT_INIT
+    TIMER1_A1    : { * ( .int48 ) } > INT48 type = VECT_INIT
+    TIMER1_A0    : { * ( .int49 ) } > INT49 type = VECT_INIT
+    DMA          : { * ( .int50 ) } > INT50 type = VECT_INIT
+    USB_UBM      : { * ( .int51 ) } > INT51 type = VECT_INIT
+    TIMER0_A1    : { * ( .int52 ) } > INT52 type = VECT_INIT
+    TIMER0_A0    : { * ( .int53 ) } > INT53 type = VECT_INIT
+    ADC12        : { * ( .int54 ) } > INT54 type = VECT_INIT
+    USCI_B0      : { * ( .int55 ) } > INT55 type = VECT_INIT
+    USCI_A0      : { * ( .int56 ) } > INT56 type = VECT_INIT
+    WDT          : { * ( .int57 ) } > INT57 type = VECT_INIT
+    TIMER0_B1    : { * ( .int58 ) } > INT58 type = VECT_INIT
+    TIMER0_B0    : { * ( .int59 ) } > INT59 type = VECT_INIT
     COMP_B       : { * ( .int60 ) } > INT60 type = VECT_INIT
     UNMI         : { * ( .int61 ) } > INT61 type = VECT_INIT
     SYSNMI       : { * ( .int62 ) } > INT62 type = VECT_INIT
@@ -236,5 +247,5 @@ SECTIONS
 /* Include peripherals memory map                                           */
 /****************************************************************************/
 
--l cc430f5123.cmd
+-l msp430f5529.cmd
 
