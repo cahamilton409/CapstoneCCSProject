@@ -7,6 +7,8 @@
 /.jxbrowser.userdata/
 /RemoteSystemsTempFiles/
 /dvt/
-*ccsproject
-*cproject
-*cmd
+*.settings/
+*targetConfigs/
+*.ccsproject
+*.cproject
+*.cmd
