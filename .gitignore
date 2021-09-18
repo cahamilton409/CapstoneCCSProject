@@ -7,3 +7,6 @@
 /.jxbrowser.userdata/
 /RemoteSystemsTempFiles/
 /dvt/
+*.ccsproject
+*.cproject
+*.Ink_*cmd
