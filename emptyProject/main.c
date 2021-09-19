@@ -39,4 +39,62 @@
 //******************************************************************************
 void main (void)
 {
-}
+    WDT_A_hold(WDT_A_BASE); // Stop watchdog timer
+
+   Clock_Init();
+
+   Display_Init();
+   Touchscreen_Init();
+   Sound_Init();
+   Language_FSM_Init();
+   Key_Press_FSM_Init();
+
+   USB_setup(TRUE, TRUE); // Init USB & events; if a host is present, connect
+
+   __enable_interrupt();  // Enable global interrupts
+
+    while(1) {
+
+        switch(USB_getConnectionState())
+        {
+            // This case is executed while your device is enumerated on the USB host
+            case ST_ENUM_ACTIVE:
+                if (key_press_detected && (Key_Press_FSM.current_state == IDLE)) {
+                    if (key_press_type == CHANGE_PAGE) {
+                        Key_Press_FSM.Change_State(CHANGE_PAGE);
+                        Play_Sound(CHANGE_PAGE);
+                        Language_FSM.Change_State(key_press.language);
+                        Update_Display();
+                        Key_Press_FSM.Change_State(IDLE)
+                    }
+
+                    else if (key_press_type == SEND_KEY) {
+                        Key_Press_FSM.Change_State(SEND_KEY);
+                        Play_Sound(SEND_KEY);
+                        Send_Key_Press(key_press);
+                        while (Key_Press_Transmission_Active) {}
+                        Key_Press_FSM.Change_State(IDLE);
+                    }
+
+                    else if (key_press_type == MOVE_KEY) {
+                        Key_Press_FSM.Change_State(MOVE_KEY);
+                        Play_Sound(MOVE_KEY);
+                        Move_Key_To_Front(key_press);
+                        Update_Display();
+                        Key_Press_FSM.Change_State(MOVE_KEY);
+                    }
+                }
+                break;
+
+            // If the USB device is not properly connected, don't handle key presses.
+            case ST_PHYS_DISCONNECTED:
+            case ST_ENUM_SUSPENDED:
+            case ST_PHYS_CONNECTED_NOENUM_SUSP:
+                __bis_SR_register(LPM3_bits + GIE);
+                _NOP();
+                break;
+            case ST_ENUM_IN_PROGRESS:
+            default:;
+        }
+    }  //while(1)
+} //main()
