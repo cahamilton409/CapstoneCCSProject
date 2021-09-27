@@ -1,3 +1,34 @@
+/* --COPYRIGHT--,BSD
+ * Copyright (c) 2016, Texas Instruments Incorporated
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * *  Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ * *  Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * *  Neither the name of Texas Instruments Incorporated nor the names of
+ *    its contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+ * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * --/COPYRIGHT--*/
 //*****************************************************************************
 //
 // timer_d.h - Driver for the TIMER_D Module.
@@ -37,7 +68,8 @@ extern "C"
 //! \brief Used in the Timer_D_initUpMode() function as the param parameter.
 //
 //*****************************************************************************
-typedef struct Timer_D_initUpModeParam {
+typedef struct Timer_D_initUpModeParam
+{
     //! Selects Clock source.
     //! \n Valid values are:
     //! - \b TIMER_D_CLOCKSOURCE_EXTERNAL_TDCLK [Default]
@@ -101,7 +133,8 @@ typedef struct Timer_D_initUpModeParam {
 //! parameter.
 //
 //*****************************************************************************
-typedef struct Timer_D_initCompareModeParam {
+typedef struct Timer_D_initCompareModeParam
+{
     //! Selects the Capture register being used.
     //! \n Valid values are:
     //! - \b TIMER_D_CAPTURECOMPARE_REGISTER_0
@@ -138,7 +171,8 @@ typedef struct Timer_D_initCompareModeParam {
 //! parameter.
 //
 //*****************************************************************************
-typedef struct Timer_D_initContinuousModeParam {
+typedef struct Timer_D_initContinuousModeParam
+{
     //! Selects Clock source.
     //! \n Valid values are:
     //! - \b TIMER_D_CLOCKSOURCE_EXTERNAL_TDCLK [Default]
@@ -190,68 +224,12 @@ typedef struct Timer_D_initContinuousModeParam {
 
 //*****************************************************************************
 //
-//! \brief Used in the Timer_D_initHighResGeneratorInRegulatedMode() function
-//! as the param parameter.
-//
-//*****************************************************************************
-typedef struct Timer_D_initHighResGeneratorInRegulatedModeParam {
-    //! Selects Clock source.
-    //! \n Valid values are:
-    //! - \b TIMER_D_CLOCKSOURCE_EXTERNAL_TDCLK [Default]
-    //! - \b TIMER_D_CLOCKSOURCE_ACLK
-    //! - \b TIMER_D_CLOCKSOURCE_SMCLK
-    //! - \b TIMER_D_CLOCKSOURCE_INVERTED_EXTERNAL_TDCLK
-    uint16_t clockSource;
-    //! Is the divider for clock source.
-    //! \n Valid values are:
-    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_1 [Default]
-    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_2
-    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_3
-    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_4
-    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_5
-    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_6
-    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_7
-    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_8
-    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_10
-    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_12
-    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_14
-    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_16
-    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_20
-    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_24
-    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_28
-    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_32
-    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_40
-    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_48
-    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_56
-    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_64
-    uint16_t clockSourceDivider;
-    //! Is the selected clock mode register values.
-    //! \n Valid values are:
-    //! - \b TIMER_D_CLOCKINGMODE_EXTERNAL_CLOCK [Default]
-    //! - \b TIMER_D_CLOCKINGMODE_HIRES_LOCAL_CLOCK
-    //! - \b TIMER_D_CLOCKINGMODE_AUXILIARY_CLK
-    uint16_t clockingMode;
-    //! Selects the high resolution multiply factor.
-    //! \n Valid values are:
-    //! - \b TIMER_D_HIGHRES_CLK_MULTIPLY_FACTOR_8x
-    //! - \b TIMER_D_HIGHRES_CLK_MULTIPLY_FACTOR_16x
-    uint8_t highResClockMultiplyFactor;
-    //! Selects the high resolution divider.
-    //! \n Valid values are:
-    //! - \b TIMER_D_HIGHRES_CLK_DIVIDER_1
-    //! - \b TIMER_D_HIGHRES_CLK_DIVIDER_2
-    //! - \b TIMER_D_HIGHRES_CLK_DIVIDER_4
-    //! - \b TIMER_D_HIGHRES_CLK_DIVIDER_8
-    uint8_t highResClockDivider;
-} Timer_D_initHighResGeneratorInRegulatedModeParam;
-
-//*****************************************************************************
-//
 //! \brief Used in the Timer_D_initUpDownMode() function as the param
 //! parameter.
 //
 //*****************************************************************************
-typedef struct Timer_D_initUpDownModeParam {
+typedef struct Timer_D_initUpDownModeParam
+{
     //! Selects Clock source.
     //! \n Valid values are:
     //! - \b TIMER_D_CLOCKSOURCE_EXTERNAL_TDCLK [Default]
@@ -310,11 +288,70 @@ typedef struct Timer_D_initUpDownModeParam {
 
 //*****************************************************************************
 //
+//! \brief Used in the Timer_D_initHighResGeneratorInRegulatedMode() function
+//! as the param parameter.
+//
+//*****************************************************************************
+typedef struct Timer_D_initHighResGeneratorInRegulatedModeParam
+{
+    //! Selects Clock source.
+    //! \n Valid values are:
+    //! - \b TIMER_D_CLOCKSOURCE_EXTERNAL_TDCLK [Default]
+    //! - \b TIMER_D_CLOCKSOURCE_ACLK
+    //! - \b TIMER_D_CLOCKSOURCE_SMCLK
+    //! - \b TIMER_D_CLOCKSOURCE_INVERTED_EXTERNAL_TDCLK
+    uint16_t clockSource;
+    //! Is the divider for clock source.
+    //! \n Valid values are:
+    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_1 [Default]
+    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_2
+    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_3
+    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_4
+    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_5
+    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_6
+    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_7
+    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_8
+    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_10
+    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_12
+    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_14
+    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_16
+    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_20
+    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_24
+    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_28
+    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_32
+    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_40
+    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_48
+    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_56
+    //! - \b TIMER_D_CLOCKSOURCE_DIVIDER_64
+    uint16_t clockSourceDivider;
+    //! Is the selected clock mode register values.
+    //! \n Valid values are:
+    //! - \b TIMER_D_CLOCKINGMODE_EXTERNAL_CLOCK [Default]
+    //! - \b TIMER_D_CLOCKINGMODE_HIRES_LOCAL_CLOCK
+    //! - \b TIMER_D_CLOCKINGMODE_AUXILIARY_CLK
+    uint16_t clockingMode;
+    //! Selects the high resolution multiply factor.
+    //! \n Valid values are:
+    //! - \b TIMER_D_HIGHRES_CLK_MULTIPLY_FACTOR_8x
+    //! - \b TIMER_D_HIGHRES_CLK_MULTIPLY_FACTOR_16x
+    uint8_t highResClockMultiplyFactor;
+    //! Selects the high resolution divider.
+    //! \n Valid values are:
+    //! - \b TIMER_D_HIGHRES_CLK_DIVIDER_1
+    //! - \b TIMER_D_HIGHRES_CLK_DIVIDER_2
+    //! - \b TIMER_D_HIGHRES_CLK_DIVIDER_4
+    //! - \b TIMER_D_HIGHRES_CLK_DIVIDER_8
+    uint8_t highResClockDivider;
+} Timer_D_initHighResGeneratorInRegulatedModeParam;
+
+//*****************************************************************************
+//
 //! \brief Used in the Timer_D_combineTDCCRToOutputPWM() function as the param
 //! parameter.
 //
 //*****************************************************************************
-typedef struct Timer_D_combineTDCCRToOutputPWMParam {
+typedef struct Timer_D_combineTDCCRToOutputPWMParam
+{
     //! Selects Clock source.
     //! \n Valid values are:
     //! - \b TIMER_D_CLOCKSOURCE_EXTERNAL_TDCLK [Default]
@@ -382,7 +419,8 @@ typedef struct Timer_D_combineTDCCRToOutputPWMParam {
 //! parameter.
 //
 //*****************************************************************************
-typedef struct Timer_D_initCaptureModeParam {
+typedef struct Timer_D_initCaptureModeParam
+{
     //! Selects the Capture register being used. Refer to datasheet to ensure
     //! the device has the capture compare register being used
     //! \n Valid values are:
@@ -441,7 +479,8 @@ typedef struct Timer_D_initCaptureModeParam {
 //! \brief Used in the Timer_D_outputPWM() function as the param parameter.
 //
 //*****************************************************************************
-typedef struct Timer_D_outputPWMParam {
+typedef struct Timer_D_outputPWMParam
+{
     //! Selects Clock source.
     //! \n Valid values are:
     //! - \b TIMER_D_CLOCKSOURCE_EXTERNAL_TDCLK [Default]
@@ -504,7 +543,6 @@ typedef struct Timer_D_outputPWMParam {
     //! Specifies the dutycycle for the generated waveform
     uint16_t dutyCycle;
 } Timer_D_outputPWMParam;
-
 
 //*****************************************************************************
 //
@@ -1057,8 +1095,8 @@ extern void Timer_D_disableHighResInterrupt(uint16_t baseAddress,
 //! \param baseAddress is the base address of the TIMER_D module.
 //!
 //! \return One of the following:
-//!         - \b TIMER_D_INTERRUPT_NOT_PENDING
-//!         - \b TIMER_D_INTERRUPT_PENDING
+//!         - \b Timer_D_INTERRUPT_NOT_PENDING
+//!         - \b Timer_D_INTERRUPT_PENDING
 //!         \n indicating the timer interrupt status
 //
 //*****************************************************************************
@@ -1130,8 +1168,8 @@ extern void Timer_D_disableCaptureCompareInterrupt(uint16_t baseAddress,
 //!        - \b TIMER_D_CAPTURECOMPARE_INTERRUPT_FLAG
 //!
 //! \return Logical OR of any of the following:
-//!         - \b TIMER_D_CAPTURE_OVERFLOW
-//!         - \b TIMER_D_CAPTURECOMPARE_INTERRUPT_FLAG
+//!         - \b Timer_D_CAPTURE_OVERFLOW
+//!         - \b Timer_D_CAPTURECOMPARE_INTERRUPT_FLAG
 //!         \n indicating the status of the masked flags
 //
 //*****************************************************************************
@@ -1154,10 +1192,10 @@ extern uint32_t Timer_D_getCaptureCompareInterruptStatus(uint16_t baseAddress,
 //! Modified bits of \b TDxHINT register.
 //!
 //! \return Logical OR of any of the following:
-//!         - \b TIMER_D_HIGH_RES_FREQUENCY_UNLOCK
-//!         - \b TIMER_D_HIGH_RES_FREQUENCY_LOCK
-//!         - \b TIMER_D_HIGH_RES_FAIL_HIGH
-//!         - \b TIMER_D_HIGH_RES_FAIL_LOW
+//!         - \b Timer_D_HIGH_RES_FREQUENCY_UNLOCK
+//!         - \b Timer_D_HIGH_RES_FREQUENCY_LOCK
+//!         - \b Timer_D_HIGH_RES_FAIL_HIGH
+//!         - \b Timer_D_HIGH_RES_FAIL_LOW
 //!         \n indicating the status of the masked interrupts
 //
 //*****************************************************************************
@@ -1217,8 +1255,8 @@ extern void Timer_D_clearHighResInterrupt(uint16_t baseAddress,
 //!        - \b TIMER_D_READ_CAPTURE_COMPARE_INPUT
 //!
 //! \return One of the following:
-//!         - \b TIMER_D_CAPTURECOMPARE_INPUT_HIGH
-//!         - \b TIMER_D_CAPTURECOMPARE_INPUT_LOW
+//!         - \b Timer_D_CAPTURECOMPARE_INPUT_HIGH
+//!         - \b Timer_D_CAPTURECOMPARE_INPUT_LOW
 //
 //*****************************************************************************
 extern uint8_t Timer_D_getSynchronizedCaptureCompareInput(uint16_t baseAddress,
@@ -1241,8 +1279,8 @@ extern uint8_t Timer_D_getSynchronizedCaptureCompareInput(uint16_t baseAddress,
 //!        - \b TIMER_D_CAPTURECOMPARE_REGISTER_6
 //!
 //! \return One of the following:
-//!         - \b TIMER_D_OUTPUTMODE_OUTBITVALUE_HIGH
-//!         - \b TIMER_D_OUTPUTMODE_OUTBITVALUE_LOW
+//!         - \b Timer_D_OUTPUTMODE_OUTBITVALUE_HIGH
+//!         - \b Timer_D_OUTPUTMODE_OUTBITVALUE_LOW
 //
 //*****************************************************************************
 extern uint8_t Timer_D_getOutputForOutputModeOutBitValue(uint16_t baseAddress,
@@ -1306,7 +1344,7 @@ extern uint16_t Timer_D_getCaptureCompareLatchCount(uint16_t baseAddress,
 //!        - \b TIMER_D_CAPTURECOMPARE_REGISTER_6
 //!
 //! \return One of the following:
-//!         - \b TIMER_D_CAPTURECOMPARE_INPUT
+//!         - \b Timer_D_CAPTURECOMPARE_INPUT
 //!         - \b 0x00
 //!         \n indicating the current input signal
 //
@@ -1453,8 +1491,9 @@ extern void Timer_D_clearCaptureCompareInterrupt(uint16_t baseAddress,
 //! \return STATUS_SUCCESS or STATUS_FAIL
 //
 //*****************************************************************************
-extern uint8_t Timer_D_initHighResGeneratorInFreeRunningMode(uint16_t baseAddress,
-                                                             uint8_t desiredHighResFrequency);
+extern uint8_t Timer_D_initHighResGeneratorInFreeRunningMode(
+    uint16_t baseAddress,
+    uint8_t desiredHighResFrequency);
 
 //*****************************************************************************
 //
@@ -1744,3 +1783,4 @@ extern void Timer_D_setOutputMode(uint16_t baseAddress,
 
 #endif
 #endif // __MSP430WARE_TIMER_D_H__
+//Released_Version_5_20_06_02

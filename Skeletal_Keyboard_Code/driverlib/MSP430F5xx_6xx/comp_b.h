@@ -1,3 +1,34 @@
+/* --COPYRIGHT--,BSD
+ * Copyright (c) 2016, Texas Instruments Incorporated
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * *  Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ * *  Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * *  Neither the name of Texas Instruments Incorporated nor the names of
+ *    its contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+ * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * --/COPYRIGHT--*/
 //*****************************************************************************
 //
 // comp_b.h - Driver for the COMP_B Module.
@@ -28,7 +59,8 @@ extern "C"
 //! \brief Used in the Comp_B_init() function as the param parameter.
 //
 //*****************************************************************************
-typedef struct Comp_B_initParam {
+typedef struct Comp_B_initParam
+{
     //! Selects the input to the positive terminal.
     //! \n Valid values are:
     //! - \b COMP_B_INPUT0 [Default]
@@ -98,7 +130,8 @@ typedef struct Comp_B_initParam {
 //! parameter.
 //
 //*****************************************************************************
-typedef struct Comp_B_configureReferenceVoltageParam {
+typedef struct Comp_B_configureReferenceVoltageParam
+{
     //! Decides the source and max amount of Voltage that can be used as a
     //! reference.
     //! \n Valid values are:
@@ -120,7 +153,6 @@ typedef struct Comp_B_configureReferenceVoltageParam {
     //! - \b COMP_B_ACCURACY_CLOCKED
     uint16_t referenceAccuracy;
 } Comp_B_configureReferenceVoltageParam;
-
 
 //*****************************************************************************
 //
@@ -229,8 +261,8 @@ typedef struct Comp_B_configureReferenceVoltageParam {
 // for functions: Comp_B_setInterruptEdgeDirection().
 //
 //*****************************************************************************
-#define COMP_B_RISINGEDGE                                            (!(CBIES))
-#define COMP_B_FALLINGEDGE                                              (CBIES)
+#define COMP_B_FALLINGEDGE                                           (!(CBIES))
+#define COMP_B_RISINGEDGE                                               (CBIES)
 
 //*****************************************************************************
 //
@@ -240,24 +272,6 @@ typedef struct Comp_B_configureReferenceVoltageParam {
 //*****************************************************************************
 #define COMP_B_LOW                                                        (0x0)
 #define COMP_B_HIGH                                                     (CBOUT)
-
-//*****************************************************************************
-//
-// The following are values that can be passed to the selectType parameter for
-// functions: Comp_B_selectReferenceVoltage().
-//
-//*****************************************************************************
-#define COMP_B_VREF_AUTO_SELECT                                          0x0000
-#define COMP_B_VREF_MANUAL_SELECT                                        CBMRVS
-
-//*****************************************************************************
-//
-// The following are values that can be passed to the selectVRef parameter for
-// functions: Comp_B_selectReferenceVoltage().
-//
-//*****************************************************************************
-#define COMP_B_SELECT_VREF0                                              0x0000
-#define COMP_B_SELECT_VREF1                                              CBMRVL
 
 //*****************************************************************************
 //
@@ -386,8 +400,8 @@ extern void Comp_B_clearInterrupt(uint16_t baseAddress,
 //!        - \b COMP_B_OUTPUTINVERTED_FLAG - Output interrupt inverted polarity
 //!
 //! \return Logical OR of any of the following:
-//!         - \b COMP_B_OUTPUT_FLAG Output interrupt
-//!         - \b COMP_B_OUTPUTINVERTED_FLAG Output interrupt inverted polarity
+//!         - \b Comp_B_OUTPUT_FLAG Output interrupt
+//!         - \b Comp_B_OUTPUTINVERTED_FLAG Output interrupt inverted polarity
 //!         \n indicating the status of the masked interrupts
 //
 //*****************************************************************************
@@ -406,13 +420,13 @@ extern uint8_t Comp_B_getInterruptStatus(uint16_t baseAddress,
 //! \param edgeDirection determines which direction the edge would have to go
 //!        to generate an interrupt based on the non-inverted interrupt flag.
 //!        Valid values are:
-//!        - \b COMP_B_RISINGEDGE [Default] - sets the bit to generate an
-//!           interrupt when the output of the Comp_B falls from LOW to HIGH if
-//!           the normal interrupt bit is set(and HIGH to LOW if the inverted
+//!        - \b COMP_B_FALLINGEDGE [Default] - sets the bit to generate an
+//!           interrupt when the output of the Comp_B falls from HIGH to LOW if
+//!           the normal interrupt bit is set(and LOW to HIGH if the inverted
 //!           interrupt enable bit is set).
-//!        - \b COMP_B_FALLINGEDGE - sets the bit to generate an interrupt when
-//!           the output of the Comp_B rises from HIGH to LOW if the normal
-//!           interrupt bit is set(and LOW to HIGH if the inverted interrupt
+//!        - \b COMP_B_RISINGEDGE - sets the bit to generate an interrupt when
+//!           the output of the Comp_B rises from LOW to HIGH if the normal
+//!           interrupt bit is set(and HIGH to LOW if the inverted interrupt
 //!           enable bit is set).
 //!        \n Modified bits are \b CBIES of \b CBCTL1 register.
 //!
@@ -598,43 +612,12 @@ extern void Comp_B_swapIO(uint16_t baseAddress);
 //! \param baseAddress is the base address of the COMP_B module.
 //!
 //! \return One of the following:
-//!         - \b COMP_B_LOW
-//!         - \b COMP_B_HIGH
+//!         - \b Comp_B_LOW
+//!         - \b Comp_B_HIGH
 //!         \n indicating the output value of the Comp_B module
 //
 //*****************************************************************************
 extern uint16_t Comp_B_outputValue(uint16_t baseAddress);
-
-//*****************************************************************************
-//
-//! \brief Modifies how comparator output selects between VREF0 or VREF1.
-//!
-//! Only applicable in certain Comp_B reference sources. Consult
-//! Comp_B_configureReferenceVoltage for details. If COMP_B_VREF_AUTO_SELECT,
-//! then comparator output state chooses between VREF0 and VREF1. If
-//! COMP_B_VREF_MANUAL_SELECT, then selectVRef param chooses.
-//!
-//! \param baseAddress is the base address of the COMP_B module.
-//! \param selectType determines whether VREF instance is chosen automatically
-//!        or manually
-//!        Valid values are:
-//!        - \b COMP_B_VREF_AUTO_SELECT [Default] - VREF instance is chosen by
-//!           comparator output state.
-//!        - \b COMP_B_VREF_MANUAL_SELECT - VREF instance is chosen by user
-//!           (CBCTL1. CBMRVL bit)
-//!        \n Modified bits are \b CBMRVS of \b CBCTL1 register.
-//! \param selectVRef selects VREF0 or VREF1. Only applicable if VREF instance
-//!        is set up to be chosen manually
-//!        Valid values are:
-//!        - \b COMP_B_SELECT_VREF0 [Default]
-//!        - \b COMP_B_SELECT_VREF1
-//!        \n Modified bits are \b CBMRVL of \b CBCTL1 register.
-//!
-//
-//*****************************************************************************
-extern void Comp_B_selectReferenceVoltage(uint16_t baseAddress,
-                                          uint16_t selectType,
-                                          uint16_t selectVRef);
 
 //*****************************************************************************
 //
@@ -647,3 +630,4 @@ extern void Comp_B_selectReferenceVoltage(uint16_t baseAddress,
 
 #endif
 #endif // __MSP430WARE_COMP_B_H__
+//Released_Version_5_20_06_02
