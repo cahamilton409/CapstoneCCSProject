@@ -24,4 +24,9 @@
 class LCD_Display {
     public:
             void Display_Init();
+            void Vertex_Select_Coordinate(int16_t X, int16_t Y);
+            void Vertex_Select_Pixel(int8_t X, int8_t Y, int8_t handle, int8_t cell);
+            void Begin(int8_t prim);
+            void Set_Line_Width(int16_t width);
+            void Send_Text(int16_t X, int16_t y, int16_t font, uint16_t options, const char* s);
 };

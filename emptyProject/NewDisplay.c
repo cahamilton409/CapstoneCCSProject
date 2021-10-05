@@ -28,3 +28,45 @@ void Display_Init() {
     SPI_SEND(REG_GPIO |= (0x080 | gpio));
     SPI_SEND(REG_PCLK |= 0x500)
 }
+
+void Vertex_Select_Coordinate(int16_t X, int16_t Y) {
+    //1/16th pixel scale coordinate
+    int32_t coordinate = 0x10000000;
+    coordinate |= (X << 4);
+    coordinate |= Y;
+    SPI_SEND(coordinate);
+}
+
+void Vertex_Select_Pixel(int8_t X, int8_t Y, int8_t handle, int8_t cell) {
+    int32_t pixel = 0x20000000;
+    pixel |= (X << 7);
+    pixel |= (Y << 5);
+    pixel |= (handle << 1);
+    pixel |= cell;
+    SPI_SEND(pixel);
+}
+
+void Begin(uint8_t prim) {
+    //BITMAPS = 1
+    //POINTS = 2
+    //LINES = 3
+    //LINE_STRIP = 4
+    //EDGE_STRIP_R = 5
+    //EDGE_STRIP_L = 6
+    //EDGE_STRIP_A = 7
+    //EDGE_STRIP_B = 8
+    //RECTS = 9
+    int32_t primitive = 0x1F000000;
+    primitive |= prim;
+    SPI_SEND(primitive);
+}
+
+void Set_Line_Width(int16_t width) {
+    uint32_t size = 0x0E000000;
+    size |= width;
+    SPI_SEND(size);
+}
+
+void Send_Text(int16_t X, int16_t y, int16_t font, uint16_t options, const char* s) {
+
+}
