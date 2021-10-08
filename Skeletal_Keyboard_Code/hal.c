@@ -41,10 +41,10 @@
 #include "USB_config/descriptors.h"
 
 #include "hal.h"
+#include "KeyPress.h"
 
 #define GPIO_ALL	GPIO_PIN0|GPIO_PIN1|GPIO_PIN2|GPIO_PIN3| \
 					GPIO_PIN4|GPIO_PIN5|GPIO_PIN6|GPIO_PIN7
-
 
 extern volatile uint8_t button1Pressed;
 extern volatile uint8_t button2Pressed;
@@ -59,55 +59,32 @@ extern volatile uint8_t button2Pressed;
  */
 void USBHAL_initPorts(void)
 {
-#ifdef __MSP430_HAS_PORT1_R__
     GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_ALL);
     GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_ALL);
-#endif
 
-#ifdef __MSP430_HAS_PORT2_R__
     GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_ALL);
     GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_ALL);
-#endif
 
-#ifdef __MSP430_HAS_PORT3_R__
     GPIO_setOutputLowOnPin(GPIO_PORT_P3, GPIO_ALL);
     GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_ALL);
-#endif
 
-#ifdef __MSP430_HAS_PORT4_R__
     GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_ALL);
     GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_ALL);
-#endif
 
-#ifdef __MSP430_HAS_PORT5_R__
     GPIO_setOutputLowOnPin(GPIO_PORT_P5, GPIO_ALL);
     GPIO_setAsOutputPin(GPIO_PORT_P5, GPIO_ALL);
-#endif
 
-#ifdef __MSP430_HAS_PORT6_R__
     GPIO_setOutputLowOnPin(GPIO_PORT_P6, GPIO_ALL);
     GPIO_setAsOutputPin(GPIO_PORT_P6, GPIO_ALL);
-#endif
 
-#ifdef __MSP430_HAS_PORT7_R__
     GPIO_setOutputLowOnPin(GPIO_PORT_P7, GPIO_ALL);
     GPIO_setAsOutputPin(GPIO_PORT_P7, GPIO_ALL);
-#endif
 
-#ifdef __MSP430_HAS_PORT8_R__
     GPIO_setOutputLowOnPin(GPIO_PORT_P8, GPIO_ALL);
     GPIO_setAsOutputPin(GPIO_PORT_P8, GPIO_ALL);
-#endif
 
-#ifdef __MSP430_HAS_PORT9_R__
-    GPIO_setOutputLowOnPin(GPIO_PORT_P9, GPIO_ALL);
-    GPIO_setAsOutputPin(GPIO_PORT_P9, GPIO_ALL);
-#endif
-
-#ifdef __MSP430_HAS_PORTJ_R__
     GPIO_setOutputLowOnPin(GPIO_PORT_PJ, GPIO_ALL);
     GPIO_setAsOutputPin(GPIO_PORT_PJ, GPIO_ALL);
-#endif
 }
 
 /* Configures the system clocks:
@@ -170,12 +147,11 @@ void __attribute__ ((interrupt(PORT1_VECTOR))) Button1_ISR (void)
     if (GPIO_getInterruptStatus (BUTTON1_PORT, BUTTON1_PIN)){
         for (i = 0x23FF; i > 0; i--){ //Cheap debounce.
         }
-        if (GPIO_getInputPinValue(BUTTON1_PORT, BUTTON1_PIN)){
+//        if (GPIO_getInputPinValue(BUTTON1_PORT, BUTTON1_PIN)){
         	button1Pressed = TRUE;
-        }
+//        }
         GPIO_clearInterrupt(BUTTON1_PORT, BUTTON1_PIN);
     }
-    __bic_SR_register_on_exit(LPM3_bits);   //Wake main from LPMx
 }
 
 /*
@@ -195,13 +171,52 @@ void __attribute__ ((interrupt(PORT2_VECTOR))) Button2_ISR (void)
     if (GPIO_getInterruptStatus (BUTTON2_PORT, BUTTON2_PIN)){
         for (i = 0x23FF; i > 0; i--){ //Cheap debounce.
         }
-        if (GPIO_getInputPinValue(BUTTON2_PORT, BUTTON2_PIN)){
+//        if (GPIO_getInputPinValue(BUTTON2_PORT, BUTTON2_PIN)){
             button2Pressed = TRUE;
-        }
+//        }
         GPIO_clearInterrupt(BUTTON2_PORT, BUTTON2_PIN);
     }
-    __bic_SR_register_on_exit(LPM3_bits);   //Wake main from LPMx
 }
+
+/*
+ * ======== UNMI_ISR ========
+ */
+#if defined(__TI_COMPILER_VERSION__) || (__IAR_SYSTEMS_ICC__)
+#pragma vector = UNMI_VECTOR
+__interrupt void UNMI_ISR (void)
+#elif defined(__GNUC__) && (__MSP430__)
+void __attribute__ ((interrupt(UNMI_VECTOR))) UNMI_ISR (void)
+#else
+#error Compiler not found!
+#endif
+{
+    switch (__even_in_range(SYSUNIV, SYSUNIV_BUSIFG))
+    {
+        case SYSUNIV_NONE:
+            __no_operation();
+            break;
+        case SYSUNIV_NMIIFG:
+            __no_operation();
+            break;
+        case SYSUNIV_OFIFG:
+             UCS_clearFaultFlag(UCS_XT2OFFG);
+            UCS_clearFaultFlag(UCS_DCOFFG);
+            SFR_clearInterrupt(SFR_OSCILLATOR_FAULT_INTERRUPT);
+            break;
+        case SYSUNIV_ACCVIFG:
+            __no_operation();
+            break;
+        case SYSUNIV_BUSIFG:
+            // If the CPU accesses USB memory while the USB module is
+            // suspended, a "bus error" can occur.  This generates an NMI.  If
+            // USB is automatically disconnecting in your software, set a
+            // breakpoint here and see if execution hits it.  See the
+            // Programmer's Guide for more information.
+            SYSBERRIV = 0; //clear bus error flag
+            USB_disable(); //Disable
+    }
+}
+
 
 
 //Released_Version_5_20_06_02

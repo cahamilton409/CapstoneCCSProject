@@ -44,18 +44,6 @@
 #define BUTTON2_PIN		GPIO_PIN1
 #define BUTTON2_VECTOR	PORT2_VECTOR
 
-
-/*----------------------------------------------------------------------------
- * The following function names are deprecated.  These were updated to new 
- * names to follow OneMCU naming convention.
- +---------------------------------------------------------------------------*/
-
-#ifndef DEPRECATED
-#define   initPorts       USBHAL_initPorts
-#define   initClocks      USBHAL_initClocks
-#define   initButtons     USBHAL_initButtons
-#endif
-
 void USBHAL_initPorts(void);
 void USBHAL_initClocks(uint32_t mclkFreq);
 void USBHAL_initButtons(void);
