@@ -29,20 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * --/COPYRIGHT--*/
-/*  
- * ======== main.c ========
- * Keyboard HID Demo:
- *
- * This example functions as a keyboard on the host. Once enumerated, pressing 
- * one of the target board?s buttons causes a string of six characters ? 
- * "msp430" -- to be "typed" at the PC?s cursor, wherever that cursor is.  
- * If the other button is held down while this happens, it acts as a shift key, 
- * causing the characters to become "MSP$#)".
- * Unlike the HID-Datapipe examples, this one does not communicate with the 
- * HID Demo Application.
-  +----------------------------------------------------------------------------+
- * Please refer to the Examples Guide for more details.
- *----------------------------------------------------------------------------*/
+
 #include <string.h>
 
 #include "driverlib.h"
@@ -53,23 +40,11 @@
 #include "USB_API/USB_HID_API/UsbHid.h"
 
 #include "USB_app/keyboard.h"
-/*
- * NOTE: Modify hal.h to select a specific evaluation board and customize for
- * your own board.
- */
 #include "hal.h"
 
 /////////////////////////
-#include "Audio.h"
-#include "Display.h"
-#include "FlashMem.h"
-#include "FSM.h"
 #include "KeyPress.h"
-
-#define SPANISH 0x00;
-#define FRENCH  0x01;
 /////////////////////////
-
 
 /*********** Application specific globals **********************/
 volatile uint8_t button1Pressed = FALSE;
@@ -78,11 +53,6 @@ volatile uint8_t keySendComplete = TRUE;
 uint8_t numSpanishCharacters;
 uint8_t numFrenchCharacters;
 
-
-//////////////////////////
-volatile uint8_t currentLanguage = 0;
-//////////////////////////
-
 /*  
  * ======== main ========
  */
@@ -90,13 +60,6 @@ void main (void)
 {
     uint8_t i;
     WDT_A_hold(WDT_A_BASE); // Stop watchdog timer
-
-    ///////////////////////////
-    Flash_Memory_Init();
-    Display_Init();
-    Audio_Init();
-    Key_Press_FSM_Init();
-    ///////////////////////////
     
     // INITIALIZATIONS INCLUDED WITH H8 KEYBOARD EXAMPLE.
     PMM_setVCore(PMM_CORE_LEVEL_3); // Minumum Vcore setting required for the USB API is PMM_CORE_LEVEL_2 .
@@ -115,38 +78,6 @@ void main (void)
         {
             // WWHEN THE USB DEVICE IS PROPERLY CONNECTED, HANDLE INPUTS
             case ST_ENUM_ACTIVE:
-                ///////////////////////////////////////////////////////////////////////////////////////
-//                // IF THE DEVICE IS IDLE AND A KEY PRESS IS DETECTED, HANDLE IT ACCORDINGLY.
-//                if (key_press_detected && (Key_Press_FSM.current_state == IDLE)) {
-//                    // CHANGE THE PAGE IF THE USER SELECTED ANOTHER TAB.
-//                    if (key_press_type == CHANGE_PAGE) {
-//                        Key_Press_FSM.Change_State(CHANGE_PAGE);
-//                        Play_Sound(CHANGE_PAGE);
-//                        Language_FSM.Change_State(key_press.language);
-//                        Update_Display();
-//                        Key_Press_FSM.Change_State(IDLE)
-//                    }
-//
-//                    // TYPE A KEY IF THE USER PRESSED A KEY.
-//                    else if (key_press_type == SEND_KEY) {
-//                        Key_Press_FSM.Change_State(SEND_KEY);
-//                        Play_Sound(SEND_KEY);
-//                        Send_Key_Press(key_press);
-//                        while (Key_Press_Transmission_Active) {}
-//                        Key_Press_FSM.Change_State(IDLE);
-//                    }
-//
-//                    // REARRANGE A KEY IF A USER HELD DOWN A KEY.
-//                    else if (key_press_type == MOVE_KEY) {
-//                        Key_Press_FSM.Change_State(MOVE_KEY);
-//                        Play_Sound(MOVE_KEY);
-//                        Move_Key_To_Front(key_press);
-//                        Update_Display();
-//                        Key_Press_FSM.Change_State(MOVE_KEY);
-//                    }
-//                }
-//                break;
-                ///////////////////////////////////////////////////////////////////////////////////////
 
                 /************* HID keyboard portion ************************/
                 if (button1Pressed) {
