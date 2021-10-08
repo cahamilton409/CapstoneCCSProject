@@ -64,6 +64,7 @@
 #include "Display.h"
 #include "FlashMem.h"
 #include "FSM.h"
+#include "KeyPress.h"
 
 #define SPANISH 0x00;
 #define FRENCH  0x01;
@@ -74,8 +75,9 @@
 volatile uint8_t button1Pressed = FALSE;
 volatile uint8_t button2Pressed = FALSE;
 volatile uint8_t keySendComplete = TRUE;
-uint8_t button1Buf[128] = "msp430";
-uint8_t button1StringLength;
+uint8_t numSpanishCharacters;
+uint8_t numFrenchCharacters;
+
 
 //////////////////////////
 volatile uint8_t currentLanguage = 0;
@@ -150,27 +152,19 @@ void main (void)
                 __bis_SR_register(LPM0_bits + GIE);
 
                 /************* HID keyboard portion ************************/
-                if (button1Pressed){
-                    button1StringLength = strlen((const char *)button1Buf);
-                    if (button2Pressed) {
-                        Keyboard_press(KEY_LEFT_SHIFT);
-                        while(!keySendComplete);
-                        keySendComplete = FALSE;
+                if (button1Pressed) {
+                    for (i=0; i<NUM_SPANISH_CHARACTERS; i++) {
+                        SpecialKeyPress(SpanishCharacters[i]);
                     }
-                    for (i=0; i<button1StringLength; i++) {
-                        Keyboard_press(button1Buf[i]);
-                        while(!keySendComplete);
-                        keySendComplete = FALSE;
-                        Keyboard_release(button1Buf[i]);
-                        while(!keySendComplete);
-                        keySendComplete = FALSE;
-                    }
-                    Keyboard_release(KEY_LEFT_SHIFT);
-                    while(!keySendComplete);
-                    keySendComplete = FALSE;
-                    button1Pressed = FALSE;
-                    button2Pressed = FALSE;
                 }
+                button1Pressed = FALSE;
+
+                if (button2Pressed) {
+                    for (i=0; i<NUM_FRENCH_CHARACTERS; i++) {
+                        SpecialKeyPress(FrenchCharacters[i]);
+                    }
+                }
+                button2Pressed = FALSE;
                 break;
 
 

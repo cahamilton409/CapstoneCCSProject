@@ -149,7 +149,8 @@ void USBHAL_initButtons(void)
 	GPIO_setOutputHighOnPin(BUTTON2_PORT, BUTTON2_PIN);
 	GPIO_setAsInputPinWithPullUpResistor(BUTTON2_PORT, BUTTON2_PIN);
 	GPIO_clearInterrupt(BUTTON2_PORT, BUTTON2_PIN);
-	//GPIO_enableInterrupt(BUTTON2_PORT, BUTTON2_PIN);
+    GPIO_enableInterrupt(BUTTON2_PORT, BUTTON2_PIN);
+
 }
 
 /*
@@ -172,16 +173,35 @@ void __attribute__ ((interrupt(PORT1_VECTOR))) Button1_ISR (void)
         if (GPIO_getInputPinValue(BUTTON1_PORT, BUTTON1_PIN)){
         	button1Pressed = TRUE;
         }
-        if (!GPIO_getInputPinValue(BUTTON2_PORT, BUTTON2_PIN)){
-        	button2Pressed = TRUE;
-        }
-        else {
-        	button2Pressed = FALSE;
-        }
+        GPIO_clearInterrupt(BUTTON1_PORT, BUTTON1_PIN);
     }
-
-    GPIO_clearInterrupt(BUTTON1_PORT, BUTTON1_PIN);
     __bic_SR_register_on_exit(LPM3_bits);   //Wake main from LPMx
 }
+
+/*
+ * ======== Port2_ISR ========
+ */
+#if defined(__TI_COMPILER_VERSION__) || (__IAR_SYSTEMS_ICC__)
+#pragma vector=PORT2_VECTOR
+__interrupt void Button2_ISR (void)
+#elif defined(__GNUC__) && (__MSP430__)
+void __attribute__ ((interrupt(PORT2_VECTOR))) Button2_ISR (void)
+#else
+#error Compiler not found!
+#endif
+{
+    uint16_t i;
+
+    if (GPIO_getInterruptStatus (BUTTON2_PORT, BUTTON2_PIN)){
+        for (i = 0x23FF; i > 0; i--){ //Cheap debounce.
+        }
+        if (GPIO_getInputPinValue(BUTTON2_PORT, BUTTON2_PIN)){
+            button2Pressed = TRUE;
+        }
+        GPIO_clearInterrupt(BUTTON2_PORT, BUTTON2_PIN);
+    }
+    __bic_SR_register_on_exit(LPM3_bits);   //Wake main from LPMx
+}
+
 
 //Released_Version_5_20_06_02
