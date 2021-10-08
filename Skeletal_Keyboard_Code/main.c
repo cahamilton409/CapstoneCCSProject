@@ -99,9 +99,9 @@ void main (void)
     ///////////////////////////
     
     // INITIALIZATIONS INCLUDED WITH H8 KEYBOARD EXAMPLE.
-    PMM_setVCore(PMM_CORE_LEVEL_2); // Minumum Vcore setting required for the USB API is PMM_CORE_LEVEL_2 .
+    PMM_setVCore(PMM_CORE_LEVEL_3); // Minumum Vcore setting required for the USB API is PMM_CORE_LEVEL_2 .
     USBHAL_initPorts();             // Config GPIOS for low-power (output low)
-    USBHAL_initClocks(8000000);     // Config clocks. MCLK=SMCLK=FLL=8MHz; ACLK=REFO=32kHz
+    USBHAL_initClocks(25000000);     // Config clocks. MCLK=SMCLK=FLL=8MHz; ACLK=REFO=32kHz
     USBHAL_initButtons();           // Init the two buttons
     Keyboard_init();                // Init keyboard report
     USB_setup(TRUE, TRUE);          // Init USB & events; if a host is present, connect
@@ -147,9 +147,6 @@ void main (void)
 //                }
 //                break;
                 ///////////////////////////////////////////////////////////////////////////////////////
-
-                // Enter LPM0 w/interrupt, until a keypress occurs
-                __bis_SR_register(LPM0_bits + GIE);
 
                 /************* HID keyboard portion ************************/
                 if (button1Pressed) {
