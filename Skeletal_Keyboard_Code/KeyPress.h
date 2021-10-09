@@ -12,6 +12,8 @@
 #include <stdlib.h>
 #include "USB_app/keyboard.h"
 
+#include "FSM.h"
+
 // Spanish Symbol Mappings.
 #define A_RIGHT_ACCENT                  'z'
 #define E_RIGHT_ACCENT                  'x'
@@ -21,7 +23,7 @@
 #define U_DIAERESIS                     'n'
 #define N_TENUTO                        'm'
 #define QUESTION_MARK_INVERTED          ','
-#define EXCLAMATION_POINT_INVERTED     '.'
+#define EXCLAMATION_POINT_INVERTED      '.'
 
 // French Symbol Mappings.
 #define A_LEFT_ACCENT                   '1'
@@ -44,10 +46,43 @@
 #define NUM_SPANISH_CHARACTERS 9
 #define NUM_FRENCH_CHARACTERS 16
 
+
+
+typedef enum {
+    French,
+    Spanish
+} Language;
+
+typedef enum {
+    Key1,
+    Key2,
+    Key3,
+    Key4,
+    Key5,
+    Key6,
+    Key7,
+    Key8,
+    Key9,
+    SpanishTab,
+    FrenchTab
+} Button;
+
+typedef struct {
+    Button       PressedKey;            // Which key was pressed
+    FSMState     Action;                // How the key was pressed
+    uint8_t      KeyPressDetected;      // If a key press has been detected
+} KeyPressInfoType;
+
 extern const uint8_t SpanishCharacters [NUM_SPANISH_CHARACTERS];
 extern const uint8_t FrenchCharacters [NUM_FRENCH_CHARACTERS];
 extern volatile uint8_t keySendComplete;
+extern volatile KeyPressInfoType KeyPressInfo;
+extern volatile Language CurrentLanguage;
 
+void KeyPressInit(void);
+void ChangeCurrentLanguage(Button SelectedTab);
+uint8_t GetKeyFromButton(Button PressedKey);
 void SpecialKeyPress(uint8_t c);
+void MoveKeyToFront(Button PressedKey);
 
 #endif /* KEYPRESS_H_ */

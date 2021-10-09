@@ -147,9 +147,10 @@ void __attribute__ ((interrupt(PORT1_VECTOR))) Button1_ISR (void)
     if (GPIO_getInterruptStatus (BUTTON1_PORT, BUTTON1_PIN)){
         for (i = 0x23FF; i > 0; i--){ //Cheap debounce.
         }
-//        if (GPIO_getInputPinValue(BUTTON1_PORT, BUTTON1_PIN)){
-        	button1Pressed = TRUE;
-//        }
+        KeyPressInfo.KeyPressDetected = TRUE;
+        KeyPressInfo.Action = ChangePage;
+        if (CurrentLanguage == Spanish) KeyPressInfo.PressedKey = FrenchTab;
+        else KeyPressInfo.PressedKey = SpanishTab;
         GPIO_clearInterrupt(BUTTON1_PORT, BUTTON1_PIN);
     }
 }
@@ -171,9 +172,9 @@ void __attribute__ ((interrupt(PORT2_VECTOR))) Button2_ISR (void)
     if (GPIO_getInterruptStatus (BUTTON2_PORT, BUTTON2_PIN)){
         for (i = 0x23FF; i > 0; i--){ //Cheap debounce.
         }
-//        if (GPIO_getInputPinValue(BUTTON2_PORT, BUTTON2_PIN)){
-            button2Pressed = TRUE;
-//        }
+        KeyPressInfo.KeyPressDetected = TRUE;
+        KeyPressInfo.Action = SendKey;
+        KeyPressInfo.PressedKey = Key1;
         GPIO_clearInterrupt(BUTTON2_PORT, BUTTON2_PIN);
     }
 }

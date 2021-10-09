@@ -14,4 +14,6 @@
 
 void Display_Init(void);
 
+void Update_Display(void);
+
 #endif /*Display_h*/

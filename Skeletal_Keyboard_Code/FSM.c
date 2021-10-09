@@ -5,8 +5,14 @@
  *      Author: Chris
  */
 
-void Key_Press_FSM_Init(void) {
-    return;
+#include "FSM.h"
+
+void Key_Press_FSM_Init(FSMType *FSM)
+{
+    FSM->CurrentState = Idle;
 }
+
+
+
 
 

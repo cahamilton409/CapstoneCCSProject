@@ -11,3 +11,7 @@ void Display_Init() {
     //AVDD on
     //STBYB OFF
 }
+
+void Update_Display() {
+    return;
+}

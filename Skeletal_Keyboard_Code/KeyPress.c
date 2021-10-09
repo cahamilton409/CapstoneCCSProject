@@ -42,6 +42,35 @@ const uint8_t FrenchCharacters [NUM_FRENCH_CHARACTERS] = {
     AE,
     OE};
 
+// TODO This variable will be associated with flash memory and may be moved.
+volatile Language CurrentLanguage;
+volatile uint8_t keySendComplete = TRUE;
+volatile KeyPressInfoType KeyPressInfo;
+
+
+void KeyPressInit() {
+    KeyPressInfo.KeyPressDetected = FALSE;
+    CurrentLanguage = Spanish; // This will need to be changed to be the last language used.
+}
+
+void ChangeCurrentLanguage(Button SelectedTab) {
+    if (SelectedTab == FrenchTab) {
+        CurrentLanguage = French;
+    }
+    else if (SelectedTab == SpanishTab) {
+        CurrentLanguage = Spanish;
+    }
+    else {
+        while(1) {}; // Wait in an infinite loop because this function should not have been called.
+    }
+}
+
+// TODO This function will likely interact with the stored flash memory, and may be moved.
+uint8_t GetKeyFromButton(Button PressedKey) {
+    return '1';
+}
+
+
 void SpecialKeyPress(uint8_t c) {
     // HOLD DOWN THE ALT KEY.
     Keyboard_press(KEY_RIGHT_ALT);
@@ -62,6 +91,10 @@ void SpecialKeyPress(uint8_t c) {
     keySendComplete = FALSE;
 }
 
+// TODO This function will interact with the flash memory and may be moved.
+void MoveKeyToFront(Button PressedKey) {
+    return;
+}
 
 
 

@@ -8,8 +8,10 @@
 #ifndef AUDIO_H_
 #define AUDIO_H_
 
+#include "FSM.h"
 
 void Audio_Init(void);
 
+void Play_Sound(FSMState State);
 
 #endif /* AUDIO_H_ */
