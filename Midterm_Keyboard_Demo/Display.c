@@ -70,3 +70,24 @@ void Set_Line_Width(int16_t width) {
 void Send_Text(int16_t X, int16_t y, int16_t font, uint16_t options, const char* s) {
 
 }
+
+void Create_Square_Center_Length_Thickness(int16_t X, int16_t Y, int16_t length, int16_t thickness) {
+    uint16_t offset = length/2;
+    // top right to bottom right
+    Set_Line_Width(thickness);
+    Begin(LINE);
+    Vertex_Select_Coordinate(X+offset, Y+offset);
+    Vertex_Select_Coordinate(X+offset, Y-offset);
+    //bottom right to bottom left
+    Set_Line_Width(thickness);
+    Vertex_Select_Coordinate(X+offset, Y-offset);
+    Vertex_Select_Coordinate(X-offset, Y-offset);
+    //bottom left to top left
+    Set_Line_Width(thickness);
+    Vertex_Select_Coordinate(X-offset, Y-offset);
+    Vertex_Select_Coordinate(X-offset, Y+offset);
+    //top left to top right
+    Set_Line_Width(thickness);
+    Vertex_Select_Coordinate(X-offset, Y+offset);
+    Vertex_Select_Coordinate(X+offset, Y+offset);
+}
