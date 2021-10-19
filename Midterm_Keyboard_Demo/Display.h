@@ -30,4 +30,5 @@ class LCD_Display {
             void Set_Line_Width(int16_t width);
             void Send_Character_at_Vertex(int16_t X, int16_t Y, int16_t font, char s);
             void Create_Button_Center_Length_Thickness_Character(int16_t X, int16_t Y, int16_t length, int16_t thickness, char character);
+            void Create_Grid_Given_Points(int16_t[] X_coords, int16_t[] Y_coords, int16_t length, char[] characters);
 };
