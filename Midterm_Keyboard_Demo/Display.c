@@ -67,11 +67,12 @@ void Set_Line_Width(int16_t width) {
     SPI_SEND(size);
 }
 
-void Send_Text(int16_t X, int16_t y, int16_t font, uint16_t options, const char* s) {
-
+void Send_Character_at_Vertex(int16_t X, int16_t Y, int16_t font, char s) {
+    Begin(BITMAP);
+    Vertex_Select_Pixel(X,Y,font,s):
 }
 
-void Create_Square_Center_Length_Thickness(int16_t X, int16_t Y, int16_t length, int16_t thickness) {
+void Create_Button_Center_Length_Thickness_Character(int16_t X, int16_t Y, int16_t length, int16_t thickness, char character) {
     uint16_t offset = length/2;
     // top right to bottom right
     Set_Line_Width(thickness);
@@ -90,4 +91,7 @@ void Create_Square_Center_Length_Thickness(int16_t X, int16_t Y, int16_t length,
     Set_Line_Width(thickness);
     Vertex_Select_Coordinate(X-offset, Y+offset);
     Vertex_Select_Coordinate(X+offset, Y+offset);
+    //send character
+    Send_Character_at_Vertex(X,Y,FONT,s);
+    
 }
