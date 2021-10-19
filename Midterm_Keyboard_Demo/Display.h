@@ -28,5 +28,6 @@ class LCD_Display {
             void Vertex_Select_Pixel(int8_t X, int8_t Y, int8_t handle, int8_t cell);
             void Begin(int8_t prim);
             void Set_Line_Width(int16_t width);
-            void Send_Text(int16_t X, int16_t y, int16_t font, uint16_t options, const char* s);
+            void Send_Character_at_Vertex(int16_t X, int16_t Y, int16_t font, char s);
+            void Create_Button_Center_Length_Thickness_Character(int16_t X, int16_t Y, int16_t length, int16_t thickness, char character);
 };
