@@ -93,5 +93,10 @@ void Create_Button_Center_Length_Thickness_Character(int16_t X, int16_t Y, int16
     Vertex_Select_Coordinate(X+offset, Y+offset);
     //send character
     Send_Character_at_Vertex(X,Y,FONT,s);
-    
+}
+
+void Create_Grid_Given_Points(int16_t[] X_coords, int16_t[] Y_coords, int16_t length, char[] characters) {
+    for (int i = 0; i < 9; i++) {
+        Create_Button_Center_Length_Thickness_Character(X_coords[i], Y_coords[i], length, THICKNESS, characters[i]);     
+    }
 }
