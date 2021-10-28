@@ -58,6 +58,7 @@
  * your own board.
  */
 #include "hal.h"
+#include "KeyPad.h"
 
 
 
@@ -67,14 +68,13 @@ volatile uint8_t button2Pressed = FALSE;
 volatile uint8_t keySendComplete = TRUE;
 uint8_t button1Buf[128] = "msp430";
 uint8_t button1StringLength;
-
+char key;
 
 /*  
  * ======== main ========
  */
 void main (void)
 {
-    uint8_t i;
     
      WDT_A_hold(WDT_A_BASE); // Stop watchdog timer
 
@@ -83,6 +83,7 @@ void main (void)
     USBHAL_initPorts();           // Config GPIOS for low-power (output low)
     USBHAL_initClocks(8000000);   // Config clocks. MCLK=SMCLK=FLL=8MHz; ACLK=REFO=32kHz
     USBHAL_initButtons();         // Init the two buttons
+    InitKeypad();
     Keyboard_init();       // Init keyboard report
     USB_setup(TRUE, TRUE); // Init USB & events; if a host is present, connect
 
@@ -90,7 +91,7 @@ void main (void)
 
     while (1)
     {
-        
+        key = switch_press_scan();
         switch(USB_getConnectionState())
         {
             // This case is executed while your device is enumerated on the
@@ -98,30 +99,40 @@ void main (void)
             case ST_ENUM_ACTIVE:
             
                 // Enter LPM0 w/interrupt, until a keypress occurs
-                __bis_SR_register(LPM0_bits + GIE);
+//                __bis_SR_register(LPM0_bits + GIE);
 
                 /************* HID keyboard portion ************************/
-                if (button1Pressed){
-                    button1StringLength = strlen((const char *)button1Buf);
-                    if (button2Pressed) {
-                        Keyboard_press(KEY_LEFT_SHIFT);
-                        while(!keySendComplete);
-                        keySendComplete = FALSE;
-                    }
-                    for (i=0; i<button1StringLength; i++) {
-                        Keyboard_press(button1Buf[i]);
-                        while(!keySendComplete);
-                        keySendComplete = FALSE;
-                        Keyboard_release(button1Buf[i]);
-                        while(!keySendComplete);
-                        keySendComplete = FALSE;
-                    }
-                    Keyboard_release(KEY_LEFT_SHIFT);
-                    while(!keySendComplete);
-                    keySendComplete = FALSE;
-                    button1Pressed = FALSE;
-                    button2Pressed = FALSE;
-                }
+
+                Keyboard_press(key);
+                while(!keySendComplete);
+                keySendComplete = FALSE;
+                Keyboard_release(key);
+                while(!keySendComplete);
+                keySendComplete = FALSE;
+
+
+
+//                if (button1Pressed){
+//                    button1StringLength = strlen((const char *)button1Buf);
+//                    if (button2Pressed) {
+//                        Keyboard_press(KEY_LEFT_SHIFT);
+//                        while(!keySendComplete);
+//                        keySendComplete = FALSE;
+//                    }
+//                    for (i=0; i<button1StringLength; i++) {
+//                        Keyboard_press(button1Buf[i]);
+//                        while(!keySendComplete);
+//                        keySendComplete = FALSE;
+//                        Keyboard_release(button1Buf[i]);
+//                        while(!keySendComplete);
+//                        keySendComplete = FALSE;
+//                    }
+//                    Keyboard_release(KEY_LEFT_SHIFT);
+//                    while(!keySendComplete);
+//                    keySendComplete = FALSE;
+//                    button1Pressed = FALSE;
+//                    button2Pressed = FALSE;
+//                }
 
 
                 break;
