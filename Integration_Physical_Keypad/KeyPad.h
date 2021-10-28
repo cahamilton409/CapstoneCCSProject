@@ -8,6 +8,7 @@
 #ifndef KEYPAD_H_
 #define KEYPAD_H_
 
+#include "KeyPress.h"
 #include "driverlib.h"
 
 #define X1_PORT GPIO_PORT_P6
@@ -46,11 +47,11 @@
 #define Y4_PIN  GPIO_PIN5
 #define Y4_IN   GPIO_getInputPinValue(Y4_PORT, Y4_PIN)
 
-char switch_press_scan(void);
+Button switch_press_scan(void);
 
 void InitKeypad(void);
 
-char keypad_scanner(void);
+Button keypad_scanner(void);
 
 
 

@@ -46,9 +46,10 @@
 #include "FlashMem.h"
 #include "FSM.h"
 #include "KeyPress.h"
+#include "KeyPad.h"
 
 void SendCurrentCharacterSet(void);
-
+Button key;
 
 void main (void)
 {
@@ -65,7 +66,10 @@ void main (void)
     Key_Press_FSM_Init(&Key_Press_FSM);
     KeyPressInit();
 
-    USBHAL_initButtons();           // Init the two buttons
+    // ------------- Physical Keyboard --------------------------------
+    InitKeypad();
+    // ------------- Physical Keyboard --------------------------------
+
     Keyboard_init();                // Init keyboard report
     USB_setup(TRUE, TRUE);          // Init USB & events; if a host is present, connect
 
@@ -74,9 +78,22 @@ void main (void)
     // Use LEDs for tracking the current language
     GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
     GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN7);
+    GPIO_setOutputHighOnPin(GPIO_PORT_P1, GPIO_PIN0);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN7);
+
+
 
     while (1)
     {
+        // ------------- Physical Keyboard --------------------------------
+        key = switch_press_scan();
+        KeyPressInfo.KeyPressDetected = TRUE;
+        if ((key == SpanishTab) || (key == FrenchTab)) KeyPressInfo.Action = ChangePage;
+        else KeyPressInfo.Action = SendKey;
+        KeyPressInfo.PressedKey = key;
+        // ------------- Physical Keyboard --------------------------------
+
+
         // VERIFY THAT THE USB DEVICE IS PROPERLY CONNECTED.
         switch(USB_getConnectionState())
         {
@@ -98,8 +115,7 @@ void main (void)
                         Key_Press_FSM.CurrentState = SendKey;
                         Play_Sound(SendKey);
                         uint8_t SelectedCharacter = GetKeyFromButton(KeyPressInfo.PressedKey);
-//                        SpecialKeyPress(SelectedCharacter);
-                        SendCurrentCharacterSet();
+                        SpecialKeyPress(SelectedCharacter);
                         Key_Press_FSM.CurrentState = Idle;
                     }
 

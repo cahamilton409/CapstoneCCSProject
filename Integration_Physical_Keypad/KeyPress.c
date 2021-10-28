@@ -67,7 +67,57 @@ void ChangeCurrentLanguage(Button SelectedTab) {
 
 // TODO This function will likely interact with the stored flash memory, and may be moved.
 uint8_t GetKeyFromButton(Button PressedKey) {
-    return '1';
+    if (CurrentLanguage == Spanish) {
+        switch(PressedKey) {
+            case Key1:
+                return SpanishCharacters[0];
+            case Key2:
+                return SpanishCharacters[1];
+            case Key3:
+                return SpanishCharacters[2];
+            case Key4:
+                return SpanishCharacters[3];
+            case Key5:
+                return SpanishCharacters[4];
+            case Key6:
+                return SpanishCharacters[5];
+            case Key7:
+                return SpanishCharacters[6];
+            case Key8:
+                return SpanishCharacters[7];
+            case Key9:
+                return SpanishCharacters[8];
+            default:
+                return QUESTION_MARK_INVERTED;
+        }
+    }
+
+    if (CurrentLanguage == French) {
+        switch(PressedKey) {
+            case Key1:
+                return FrenchCharacters[0];
+            case Key2:
+                return FrenchCharacters[1];
+            case Key3:
+                return FrenchCharacters[2];
+            case Key4:
+                return FrenchCharacters[3];
+            case Key5:
+                return FrenchCharacters[4];
+            case Key6:
+                return FrenchCharacters[5];
+            case Key7:
+                return FrenchCharacters[6];
+            case Key8:
+                return FrenchCharacters[7];
+            case Key9:
+                return FrenchCharacters[8];
+
+            default:
+                return QUESTION_MARK_INVERTED;
+        }
+    }
+    return QUESTION_MARK_INVERTED;
 }
 
 

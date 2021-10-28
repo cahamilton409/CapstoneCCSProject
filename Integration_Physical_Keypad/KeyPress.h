@@ -64,7 +64,8 @@ typedef enum {
     Key8,
     Key9,
     SpanishTab,
-    FrenchTab
+    FrenchTab,
+    NoKey
 } Button;
 
 typedef struct {
