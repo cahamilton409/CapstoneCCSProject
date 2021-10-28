@@ -287,8 +287,7 @@ int main(void)
   WDTCTL = WDTPW | WDTHOLD;                 // Stop Watchdog
 
   initGPIO();
-//  increaseVCoreToLevel2();
-  PMM_setVCore(PMM_CORE_LEVEL_2); // Minumum Vcore setting required for the USB API is PMM_CORE_LEVEL_2 .
+  increaseVCoreToLevel2();
   initClockTo16MHz();
   initUART();
 
