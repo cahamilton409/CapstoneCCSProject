@@ -85,5 +85,7 @@ void ChangeCurrentLanguage(Button SelectedTab);
 uint8_t GetKeyFromButton(Button PressedKey);
 void SpecialKeyPress(uint8_t c);
 void MoveKeyToFront(Button PressedKey);
+void UpdateLanguageLedIndicators(void);
+
 
 #endif /* KEYPRESS_H_ */

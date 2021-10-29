@@ -48,7 +48,6 @@
 #include "KeyPress.h"
 #include "KeyPad.h"
 
-void SendCurrentCharacterSet(void);
 Button key;
 
 void main (void)
@@ -75,11 +74,7 @@ void main (void)
 
     __enable_interrupt();  // Enable global interrupts
 
-    // Use LEDs for tracking the current language
-    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
-    GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN7);
-    GPIO_setOutputHighOnPin(GPIO_PORT_P1, GPIO_PIN0);
-    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN7);
+
 
 
 
@@ -129,14 +124,6 @@ void main (void)
                     }
                 }
                 KeyPressInfo.KeyPressDetected = FALSE;
-                if (CurrentLanguage == Spanish) {
-                    GPIO_setOutputHighOnPin(GPIO_PORT_P1, GPIO_PIN0);
-                    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN7);
-                }
-                else {
-                    GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN0);
-                    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN7);
-                }
                 break;
 
             // WHEN THE USB DEVICE IS NOT PROPERLY CONNECTED, DON'T HANDLE INPUTS.
@@ -151,19 +138,4 @@ void main (void)
         }
     }  //while(1)
 } //main()
-
-void SendCurrentCharacterSet(void) {
-    uint8_t i;
-    if (CurrentLanguage == Spanish) {
-        for (i=0; i<NUM_SPANISH_CHARACTERS; i++) {
-            SpecialKeyPress(SpanishCharacters[i]);
-        }
-    }
-
-    if (CurrentLanguage == French) {
-        for (i=0; i<NUM_FRENCH_CHARACTERS; i++) {
-            SpecialKeyPress(FrenchCharacters[i]);
-        }
-    }
-}
 

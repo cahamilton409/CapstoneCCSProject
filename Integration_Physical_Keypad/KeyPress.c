@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "driverlib.h"
 #include "USB_API/USB_Common/usb.h"
 #include "USB_app/keyboard.h"
 
@@ -51,6 +52,12 @@ volatile KeyPressInfoType KeyPressInfo;
 void KeyPressInit() {
     KeyPressInfo.KeyPressDetected = FALSE;
     CurrentLanguage = Spanish; // This will need to be changed to be the last language used.
+
+    // Use LEDs for tracking the current language
+    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
+    GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN7);
+    UpdateLanguageLedIndicators();
+
 }
 
 void ChangeCurrentLanguage(Button SelectedTab) {
@@ -60,62 +67,19 @@ void ChangeCurrentLanguage(Button SelectedTab) {
     else if (SelectedTab == SpanishTab) {
         CurrentLanguage = Spanish;
     }
-    else {
-        while(1) {}; // Wait in an infinite loop because this function should not have been called.
-    }
+    UpdateLanguageLedIndicators();
+
+
 }
 
 // TODO This function will likely interact with the stored flash memory, and may be moved.
 uint8_t GetKeyFromButton(Button PressedKey) {
     if (CurrentLanguage == Spanish) {
-        switch(PressedKey) {
-            case Key1:
-                return SpanishCharacters[0];
-            case Key2:
-                return SpanishCharacters[1];
-            case Key3:
-                return SpanishCharacters[2];
-            case Key4:
-                return SpanishCharacters[3];
-            case Key5:
-                return SpanishCharacters[4];
-            case Key6:
-                return SpanishCharacters[5];
-            case Key7:
-                return SpanishCharacters[6];
-            case Key8:
-                return SpanishCharacters[7];
-            case Key9:
-                return SpanishCharacters[8];
-            default:
-                return QUESTION_MARK_INVERTED;
-        }
+        return SpanishCharacters[PressedKey];
     }
 
     if (CurrentLanguage == French) {
-        switch(PressedKey) {
-            case Key1:
-                return FrenchCharacters[0];
-            case Key2:
-                return FrenchCharacters[1];
-            case Key3:
-                return FrenchCharacters[2];
-            case Key4:
-                return FrenchCharacters[3];
-            case Key5:
-                return FrenchCharacters[4];
-            case Key6:
-                return FrenchCharacters[5];
-            case Key7:
-                return FrenchCharacters[6];
-            case Key8:
-                return FrenchCharacters[7];
-            case Key9:
-                return FrenchCharacters[8];
-
-            default:
-                return QUESTION_MARK_INVERTED;
-        }
+        return FrenchCharacters[PressedKey];
     }
     return QUESTION_MARK_INVERTED;
 }
@@ -146,7 +110,16 @@ void MoveKeyToFront(Button PressedKey) {
     return;
 }
 
-
+void UpdateLanguageLedIndicators(void){
+    if (CurrentLanguage == Spanish) {
+        GPIO_setOutputHighOnPin(GPIO_PORT_P1, GPIO_PIN0);
+        GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN7);
+    }
+    else {
+        GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN0);
+        GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN7);
+    }
+}
 
 
 
