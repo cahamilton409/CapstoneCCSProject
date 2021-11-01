@@ -3,7 +3,7 @@
  *
  *  Created on: Sep 28, 2021
  *      Author: Chris
- *      Test comment
+ *
  */
 #include <stdint.h>
 #include "msp.h"
