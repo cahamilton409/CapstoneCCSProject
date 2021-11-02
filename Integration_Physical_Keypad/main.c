@@ -77,8 +77,14 @@ void main (void)
         // ------------- Physical Keyboard --------------------------------
         key = switch_press_scan();
         g_key_press_info.b_key_press_detected = TRUE;
-        if ((key == spanish_tab) || (key == french_tab)) {g_key_press_info.action = change_page;}
-        else {g_key_press_info.action = send_key;}
+        if ((key == spanish_tab) || (key == french_tab))
+        {
+            g_key_press_info.action = change_page;
+        }
+        else
+        {
+            g_key_press_info.action = send_key;
+        }
         g_key_press_info.pressed_key = key;
         // ------------- Physical Keyboard --------------------------------
 
@@ -90,7 +96,8 @@ void main (void)
                 // IF THE DEVICE IS IDLE AND A KEY PRESS IS DETECTED, HANDLE IT ACCORDINGLY.
                 if (g_key_press_info.b_key_press_detected && (status_fsm.current_state == idle)) {
                     // CHANGE THE PAGE IF THE USER SELECTED ANOTHER TAB.
-                    if (g_key_press_info.action == change_page) {
+                    if (g_key_press_info.action == change_page)
+                    {
                         status_fsm.current_state = change_page;
                         play_sound(change_page);
                         change_current_language(g_key_press_info.pressed_key);
@@ -99,7 +106,8 @@ void main (void)
                     }
 
                     // TYPE A KEY IF THE USER PRESSED A KEY.
-                    else if (g_key_press_info.action == send_key) {
+                    else if (g_key_press_info.action == send_key)
+                    {
                         status_fsm.current_state = send_key;
                         play_sound(send_key);
                         uint8_t selected_character = get_key_from_button(g_key_press_info.pressed_key);
@@ -108,7 +116,8 @@ void main (void)
                     }
 
                     // REARRANGE A KEY IF A USER HELD DOWN A KEY.
-                    else if (g_key_press_info.action == move_key) {
+                    else if (g_key_press_info.action == move_key)
+                    {
                         status_fsm.current_state = move_key;
                         play_sound(move_key);
                         move_key_to_front(g_key_press_info.pressed_key);
@@ -129,6 +138,6 @@ void main (void)
             case ST_ENUM_IN_PROGRESS:
             default:;
         }
-    }  //while(1)
-} //main()
+    }
+}
 

@@ -2,7 +2,7 @@
 #include <keypad.h>
 #include "driverlib.h"
 
-
+// Configure the GPIO ports for the physical keypad.
 void keypad_init(void)
 {
     // SET ALL OUTPUTS INITIALLY LOW.
@@ -28,6 +28,7 @@ void keypad_init(void)
     GPIO_setAsInputPinWithPullUpResistor(Y4_PORT, Y4_PIN);
 }
 
+// Probe the keys until a is pressed and return the key that was pressed.
 button_t switch_press_scan(void)
 {
             button_t key = no_key;
@@ -36,6 +37,7 @@ button_t switch_press_scan(void)
             return key;
 }
 
+// Probe each row of keys individually and return if a key press is detected.
 button_t keypad_scanner(void)
 {
     uint32_t i;
