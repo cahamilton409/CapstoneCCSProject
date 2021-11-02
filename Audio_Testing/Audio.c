@@ -15,6 +15,7 @@ uint8_t aState;
 utin8_t bState;
 uint8_t volume;
 
+// Initializes input ports and variables needed to keep track of the rotary encoder states
 void Audio_Init(void) {
     P4->SEL0 &= ~0x01;
     P4->SEL1 &= ~0x01;    //  P4.0 as GPIO
@@ -32,6 +33,9 @@ void Audio_Init(void) {
     return;
 }
 
+/* Currently reads in the signals from the rotary encoder, determines which direction
+*  the encoder is turning and adjusts the volume as necessary 
+*/
 int main(void){
     Clock_Init48MHz();
     Audio_Init();
@@ -39,16 +43,15 @@ int main(void){
     TExaS_Init(LOGICANALYZER_P3);
     while(1){
         aState = (P4->IN);
-
         if(aState != aLastState){
             bState = (P3->IN);
             if(bState != aState){
                 // The rotary encoder is moving clockwise, increase volume
-                volume = volume + 1; // Could be finicky...race conditions?
+                volume = volume + 1; 
             }
             else{
                 // The rotary encoder is moving counterclockwise, decrease volume
-                volume = volume - 1; // Could be finicky...race conditions?
+                volume = volume - 1;
             }
             aLastState = aState;
         }
