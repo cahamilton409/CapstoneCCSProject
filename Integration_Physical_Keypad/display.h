@@ -12,8 +12,10 @@
 //            void Display_Init();
 //};
 
-void Display_Init(void);
+void display_init(void);
 
-void Update_Display(void);
+void update_display(void);
+
+void write_data();
 
 #endif /*Display_h*/

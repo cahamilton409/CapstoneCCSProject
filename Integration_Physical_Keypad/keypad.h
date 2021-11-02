@@ -11,6 +11,8 @@
 #include <key_press.h>
 #include "driverlib.h"
 
+#define DEBOUNCE_DELAY_IN_TICKS 10000
+
 #define X1_PORT GPIO_PORT_P6
 #define X1_PIN  GPIO_PIN0
 #define X1_HIGH GPIO_setOutputHighOnPin(X1_PORT, X1_PIN)
@@ -47,11 +49,11 @@
 #define Y4_PIN  GPIO_PIN5
 #define Y4_IN   GPIO_getInputPinValue(Y4_PORT, Y4_PIN)
 
-Button switch_press_scan(void);
+button_t switch_press_scan(void);
 
-void InitKeypad(void);
+void keypad_init(void);
 
-Button keypad_scanner(void);
+button_t keypad_scanner(void);
 
 
 

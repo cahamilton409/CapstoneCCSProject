@@ -7,9 +7,9 @@
 
 #include <status_fsm.h>
 
-void Key_Press_FSM_Init(FSMType *FSM)
+void status_fsm_init(status_fsm_t *fsm)
 {
-    FSM->CurrentState = Idle;
+    fsm->current_state = idle;
 }
 
 

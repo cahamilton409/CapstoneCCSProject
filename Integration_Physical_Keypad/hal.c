@@ -41,7 +41,7 @@
 #include "USB_API/USB_Common/device.h"
 #include "USB_config/descriptors.h"
 
-#include "usb_config.h"
+#include "hal.h"
 
 #define GPIO_ALL	GPIO_PIN0|GPIO_PIN1|GPIO_PIN2|GPIO_PIN3| \
 					GPIO_PIN4|GPIO_PIN5|GPIO_PIN6|GPIO_PIN7
@@ -57,8 +57,10 @@
 * in the Descriptor Tool (currently set to 4MHz in this example).
 * See the Programmer's Guide for more information.
 */
-void USBHAL_initClocks(uint32_t mclkFreq)
+void clock_init(uint32_t mclkFreq)
 {
+    PMM_setVCore(PMM_CORE_LEVEL_3);
+
 	UCS_initClockSignal(
 	   UCS_FLLREF,
 	   UCS_REFOCLK_SELECT,

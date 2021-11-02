@@ -5,7 +5,7 @@
  *      Author: Chris
  */
 
-void Flash_Memory_Init(void) {
+void flash_memory_init(void) {
     return;
 }
 

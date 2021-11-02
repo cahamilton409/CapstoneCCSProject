@@ -10,8 +10,8 @@
 
 #include <status_fsm.h>
 
-void Audio_Init(void);
+void audio_init(void);
 
-void Play_Sound(FSMState State);
+void play_sound(status_fms_state_t state);
 
 #endif /* AUDIO_H_ */

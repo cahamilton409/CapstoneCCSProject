@@ -45,6 +45,6 @@
 #define BUTTON2_VECTOR	PORT2_VECTOR
 
 void USBHAL_initPorts(void);
-void USBHAL_initClocks(uint32_t mclkFreq);
+void clock_init(uint32_t mclkFreq);
 void USBHAL_initButtons(void);
 //Released_Version_5_20_06_02
