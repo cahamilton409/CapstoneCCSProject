@@ -5,7 +5,7 @@
  *      Author: Chris
  */
 
-#include "FSM.h"
+#include <status_fsm.h>
 
 void Key_Press_FSM_Init(FSMType *FSM)
 {

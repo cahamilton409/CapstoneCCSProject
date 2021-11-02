@@ -5,8 +5,8 @@
  *      Author: Chris
  */
 
-#include "Audio.h"
-#include "FSM.h"
+#include <audio.h>
+#include <status_fsm.h>
 
 void Audio_Init(void) {
     return;

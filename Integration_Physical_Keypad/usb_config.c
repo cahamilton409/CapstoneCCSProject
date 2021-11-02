@@ -33,6 +33,7 @@
  * ======== hal.c ========
  *
  */
+#include <key_press.h>
 #include "msp430.h"
 
 #include "driverlib.h"
@@ -40,52 +41,10 @@
 #include "USB_API/USB_Common/device.h"
 #include "USB_config/descriptors.h"
 
-#include "hal.h"
-#include "KeyPress.h"
+#include "usb_config.h"
 
 #define GPIO_ALL	GPIO_PIN0|GPIO_PIN1|GPIO_PIN2|GPIO_PIN3| \
 					GPIO_PIN4|GPIO_PIN5|GPIO_PIN6|GPIO_PIN7
-
-extern volatile uint8_t button1Pressed;
-extern volatile uint8_t button2Pressed;
-
-/*
- * This function drives all the I/O's as output-low, to avoid floating inputs
- * (which cause extra power to be consumed).  This setting is compatible with  
- * TI FET target boards, the F5529 Launchpad, and F5529 Experimenters Board;  
- * but may not be compatible with custom hardware, which may have components  
- * attached to the I/Os that could be affected by these settings.  So if using
- * other boards, this function may need to be modified.
- */
-void USBHAL_initPorts(void)
-{
-    GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_ALL);
-    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_ALL);
-
-    GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_ALL);
-    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_ALL);
-
-    GPIO_setOutputLowOnPin(GPIO_PORT_P3, GPIO_ALL);
-    GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_ALL);
-
-    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_ALL);
-    GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_ALL);
-
-    GPIO_setOutputLowOnPin(GPIO_PORT_P5, GPIO_ALL);
-    GPIO_setAsOutputPin(GPIO_PORT_P5, GPIO_ALL);
-
-    GPIO_setOutputLowOnPin(GPIO_PORT_P6, GPIO_ALL);
-    GPIO_setAsOutputPin(GPIO_PORT_P6, GPIO_ALL);
-
-    GPIO_setOutputLowOnPin(GPIO_PORT_P7, GPIO_ALL);
-    GPIO_setAsOutputPin(GPIO_PORT_P7, GPIO_ALL);
-
-    GPIO_setOutputLowOnPin(GPIO_PORT_P8, GPIO_ALL);
-    GPIO_setAsOutputPin(GPIO_PORT_P8, GPIO_ALL);
-
-    GPIO_setOutputLowOnPin(GPIO_PORT_PJ, GPIO_ALL);
-    GPIO_setAsOutputPin(GPIO_PORT_PJ, GPIO_ALL);
-}
 
 /* Configures the system clocks:
 * MCLK = SMCLK = DCO/FLL = mclkFreq (expected to be expressed in Hz)

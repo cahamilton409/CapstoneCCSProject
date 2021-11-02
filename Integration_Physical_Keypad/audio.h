@@ -8,7 +8,7 @@
 #ifndef AUDIO_H_
 #define AUDIO_H_
 
-#include "FSM.h"
+#include <status_fsm.h>
 
 void Audio_Init(void);
 

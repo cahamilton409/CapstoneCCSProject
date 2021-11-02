@@ -5,8 +5,7 @@
  *      Author: Chris
  */
 
-#include "KeyPress.h"
-
+#include <key_press.h>
 #include <stdint.h>
 #include <stdlib.h>
 

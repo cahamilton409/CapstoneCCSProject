@@ -30,7 +30,14 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * --/COPYRIGHT--*/
 
+#include <audio.h>
+#include <display.h>
+#include <flash_memory.h>
+#include <key_press.h>
+#include <keypad.h>
+#include <status_fsm.h>
 #include <string.h>
+#include <usb_config.h>
 
 #include "driverlib.h"
 
@@ -40,13 +47,6 @@
 #include "USB_API/USB_HID_API/UsbHid.h"
 #include "USB_app/keyboard.h"
 
-#include "hal.h"
-#include "Audio.h"
-#include "Display.h"
-#include "FlashMem.h"
-#include "FSM.h"
-#include "KeyPress.h"
-#include "KeyPad.h"
 
 Button key;
 
@@ -55,7 +55,6 @@ void main (void)
     WDT_A_hold(WDT_A_BASE); // Stop watchdog timer
 
     PMM_setVCore(PMM_CORE_LEVEL_3); // Minumum Vcore setting required for the USB API is PMM_CORE_LEVEL_2 .
-    USBHAL_initPorts();             // Config GPIOS for low-power (output low)
     USBHAL_initClocks(25000000);     // Config clocks. MCLK=SMCLK=FLL=8MHz; ACLK=REFO=32kHz
 
     Flash_Memory_Init();
@@ -83,8 +82,8 @@ void main (void)
         // ------------- Physical Keyboard --------------------------------
         key = switch_press_scan();
         KeyPressInfo.KeyPressDetected = TRUE;
-        if ((key == SpanishTab) || (key == FrenchTab)) KeyPressInfo.Action = ChangePage;
-        else KeyPressInfo.Action = SendKey;
+        if ((key == SpanishTab) || (key == FrenchTab)) {KeyPressInfo.Action = ChangePage;}
+        else {KeyPressInfo.Action = SendKey;}
         KeyPressInfo.PressedKey = key;
         // ------------- Physical Keyboard --------------------------------
 

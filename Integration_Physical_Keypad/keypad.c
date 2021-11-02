@@ -1,5 +1,5 @@
-#include "KeyPad.h"
-#include "KeyPress.h"
+#include <key_press.h>
+#include <keypad.h>
 #include "driverlib.h"
 
 
@@ -52,7 +52,7 @@ Button keypad_scanner(void)
     X3_HIGH;
     X4_HIGH;
     if (Y1_IN == 0) {for(i=10000; i>0; i--); while (Y1_IN==0); return Key4; }
-    if (Y2_IN == 0) {for(i=10000; i>0; i--); while (Y2_IN==0); return Key4; }
+    if (Y2_IN == 0) {for(i=10000; i>0; i--); while (Y2_IN==0); return Key5; }
     if (Y3_IN == 0) {for(i=10000; i>0; i--); while (Y3_IN==0); return Key6; }
     if (Y4_IN == 0) {for(i=10000; i>0; i--); while (Y4_IN==0); return FrenchTab; }
 

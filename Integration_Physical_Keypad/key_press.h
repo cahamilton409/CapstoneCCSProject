@@ -5,14 +5,14 @@
  *      Author: Chris
  */
 
-#ifndef KEYPRESS_H_
-#define KEYPRESS_H_
+#ifndef KEY_PRESS_H_
+#define KEY_PRESS_H_
 
+#include <status_fsm.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include "USB_app/keyboard.h"
 
-#include "FSM.h"
 
 // Spanish Symbol Mappings.
 #define A_RIGHT_ACCENT                  'z'
@@ -88,4 +88,4 @@ void MoveKeyToFront(Button PressedKey);
 void UpdateLanguageLedIndicators(void);
 
 
-#endif /* KEYPRESS_H_ */
+#endif /* KEY_PRESS_H_ */

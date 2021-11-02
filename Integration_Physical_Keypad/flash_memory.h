@@ -5,11 +5,11 @@
  *      Author: Chris
  */
 
-#ifndef FLASHMEM_H_
-#define FLASHMEM_H_
+#ifndef FLASH_MEMORY_H_
+#define FLASH_MEMORY_H_
 
 
 void Flash_Memory_Init(void);
 
 
-#endif /* FLASHMEM_H_ */
+#endif /* FLASH_MEMORY_H_ */

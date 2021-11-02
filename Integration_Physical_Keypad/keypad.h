@@ -8,7 +8,7 @@
 #ifndef KEYPAD_H_
 #define KEYPAD_H_
 
-#include "KeyPress.h"
+#include <key_press.h>
 #include "driverlib.h"
 
 #define X1_PORT GPIO_PORT_P6

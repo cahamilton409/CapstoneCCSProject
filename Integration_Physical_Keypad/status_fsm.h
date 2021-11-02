@@ -5,8 +5,8 @@
  *      Author: Chris
  */
 
-#ifndef FSM_H_
-#define FSM_H_
+#ifndef STATUS_FSM_H_
+#define STATUS_FSM_H_
 
 
 // Type Definitions
@@ -25,4 +25,4 @@ typedef struct {
 void Key_Press_FSM_Init(FSMType *FSM);
 void Change_State(FSMType *FSM, FSMState);
 
-#endif /* FSM_H_ */
+#endif /* STATUS_FSM_H_ */
