@@ -10,10 +10,10 @@
 #include "Clock.h"
 #include "TExaS.h"
 
-uint8_t aLastState; // Data from Pin A
-uint8_t aState;
-utin8_t bState;
-uint8_t volume;
+uint8_t aLastState; // Previous state (0 or 1) of Pin A
+uint8_t aState; // Current state of Pin A (0 or 1)
+utin8_t bState; // Current state of Pin B (0 or 1)
+uint8_t volume; // A test variable to track whether turning the encoder increases or decreases this value 
 
 // Initializes input ports and variables needed to keep track of the rotary encoder states
 void Audio_Init(void) {
@@ -26,7 +26,7 @@ void Audio_Init(void) {
     P3->DIR &= ~0x80;      //  make P3.7 in
 
     Clock_Delay1us(1000);
-    aLastState = (P4->IN);
+    aLastState = (P4->IN); // Get the current state of Pin A
     aState = 0;
     bState = 0;
     volume = 0;
@@ -42,7 +42,7 @@ int main(void){
     TExaS_Init(LOGICANALYZER_P4);
     TExaS_Init(LOGICANALYZER_P3);
     while(1){
-        aState = (P4->IN);
+        aState = (P4->IN); // Read in the current state of Pin A
         if(aState != aLastState){
             bState = (P3->IN);
             if(bState != aState){
