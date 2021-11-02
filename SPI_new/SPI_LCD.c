@@ -84,6 +84,7 @@ void lcd_read()
 void lcd_command(uint8_t command[])
 {
     CS_Off();                                                      //toggle transmit pin
+
     SPI_Master_Write(command, 3);                                  //send command from list of predefined commands
 
     CS_On();                                                       //toggle transmit pin
