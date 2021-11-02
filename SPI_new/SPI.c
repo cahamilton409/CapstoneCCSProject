@@ -26,10 +26,6 @@
 
 #define MAX_BUFFER_SIZE     20
 
-/*uint8_t MasterType0[TYPE_0_LENGTH] = {0x11, 0x22, 0x33, 0x44};
-uint8_t MasterType1[TYPE_1_LENGTH]= {0x22};
-uint8_t MasterType2[TYPE_2_LENGTH] = {0x33};*/
-
 uint8_t SlaveType0[TYPE_0_LENGTH] = {0};
 uint8_t SlaveType1[TYPE_1_LENGTH] = {0};
 uint8_t SlaveType2[TYPE_2_LENGTH] = {0};
@@ -43,6 +39,7 @@ uint8_t TransmitBuffer[MAX_BUFFER_SIZE] = {0};
 uint8_t TXByteCtr = 0;
 uint8_t TransmitIndex = 0;
 
+//Copies an array to a different destination.
 void CopyArray(uint8_t *source, uint8_t *dest, uint8_t count)
 {
     uint8_t copyIndex = 0;
@@ -52,6 +49,7 @@ void CopyArray(uint8_t *source, uint8_t *dest, uint8_t count)
     }
 }
 
+//Writes over SPY to a register with a value.
 SPI_Mode SPI_Master_Write(uint8_t *reg_data, uint8_t count)
 {
     MasterMode = TX_DATA_MODE;
@@ -70,6 +68,7 @@ SPI_Mode SPI_Master_Write(uint8_t *reg_data, uint8_t count)
     return MasterMode;
 }
 
+//Writes over SPY to a register with a value and a lead register.
 SPI_Mode SPI_Master_WriteReg(uint8_t reg_addr, uint8_t *reg_data, uint8_t count)
 {
     MasterMode = TX_REG_ADDRESS_MODE;
@@ -92,6 +91,7 @@ SPI_Mode SPI_Master_WriteReg(uint8_t reg_addr, uint8_t *reg_data, uint8_t count)
     return MasterMode;
 }
 
+//Reads over SPY from a register.
 SPI_Mode SPI_Master_ReadReg(uint8_t reg_addr, uint8_t count)
 {
     MasterMode = TX_REG_ADDRESS_MODE;
@@ -110,18 +110,20 @@ SPI_Mode SPI_Master_ReadReg(uint8_t reg_addr, uint8_t count)
     return MasterMode;
 }
 
-
+//Sends data to SPI buffer.
 void SendUCA0Data(uint8_t val)
 {
     while (!(UCA0IFG & UCTXIFG));              // USCI_A0 TX buffer ready?
     UCA0TXBUF = val;
 }
 
+//Toggles transmit enable bit on.
 void CS_On()
 {
     SLAVE_CS_OUT |= SLAVE_CS_PIN;
 }
 
+//Toggles transmit enable bit off.
 void CS_Off()
 {
     SLAVE_CS_OUT &= ~(SLAVE_CS_PIN);
@@ -131,6 +133,7 @@ void CS_Off()
 // Device Initialization *******************************************************
 //******************************************************************************
 
+//Setting clock to 16 MHz.
 void initClockTo16MHz()
 {
     UCSCTL3 |= SELREF_2;                      // Set DCO FLL reference = REFO
@@ -157,6 +160,7 @@ void initClockTo16MHz()
     }while (SFRIFG1&OFIFG);                         // Test oscillator fault flag
 }
 
+//adjust voltage for 16 MHz clock
 uint16_t setVCoreUp(uint8_t level){
     uint32_t PMMRIE_backup, SVSMHCTL_backup, SVSMLCTL_backup;
 
@@ -300,6 +304,7 @@ uint16_t setVCoreUp(uint8_t level){
     return true;
 }
 
+//adjust voltage core level for clock
 bool increaseVCoreToLevel2()
 {
     uint8_t level = 2;
@@ -324,6 +329,7 @@ bool increaseVCoreToLevel2()
     return (status);
 }
 
+//initialize all gpio pins
 void initGPIO()
 {
   //LEDs
@@ -346,6 +352,7 @@ void initGPIO()
   P1IE |= BIT1;                             // P1.1 interrupt enabled
 }
 
+//init SPI pins
 void initSPI()
 {
   //Clock Polarity: The inactive state is high
@@ -363,6 +370,7 @@ void initSPI()
   SLAVE_CS_OUT |= SLAVE_CS_PIN;
 }
 
+//run SPI init sequence
 void SPI_Init()
 {
     WDTCTL = WDTPW | WDTHOLD;   // Stop watchdog timer

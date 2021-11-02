@@ -1,15 +1,11 @@
-/*
- * Display.h
- *
- *  Created on: Oct 30, 2021
- *      Author: Emory
- */
+#include <msp430.h>
+#include <stdint.h>
+#include <stdbool.h>
 
-#ifndef DISPLAY_H_
-#define DISPLAY_H_
-
-#include "SPI_LCD.h"
-
+//
+//DISPLAY.H DEFINES
+//
+//Below the registers on the LCD are defined.
 #define REG_HCYCLE      0x2C
 #define REG_HOFFSET     0x30
 #define REG_HSYNC0      0x38
@@ -27,9 +23,15 @@
 #define REG_GPIO_DIR    0x90
 #define REG_GPIO        0x94
 #define REG_PCLK        0x70
-
 #define RAM_DL          0x100
 
-void Display_Init();
-
-#endif /* DISPLAY_H_ */
+//Below are the different params of begin() commands for the LCD.
+#define BITMAPS         1
+#define POINTS          2
+#define LINES           3
+#define LINE_STRIP      4
+#define EDGE_STRIP_R    5
+#define EDGE_STRIP_L    6
+#define EDGE_STRIP_A    7
+#define EDGE_STRIP_B    8
+#define RECTS           9

@@ -1,6 +1,10 @@
 /*
  * SPI.h
  *
+ * This file creates all the functions to send and receive signals
+ * over SPI. It also creates and interrupt routing for sending and
+ * receiving SPI.
+ *
  *  Created on: Oct 28, 2021
  *      Author: Emory
  */
@@ -8,10 +12,7 @@
 #ifndef SPI_H_
 #define SPI_H_
 
-
-#include <msp430.h>
-#include <stdint.h>
-#include <stdbool.h>
+#include "defs.h"
 
 typedef enum SPI_ModeEnum{
     IDLE_MODE,

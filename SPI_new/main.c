@@ -4,10 +4,11 @@
 //extern uint8_t ACTIVE[3] = {0x00, 0x00, 0x00};
 //extern uint8_t CLKEXT[3] = {0x44, 0x00, 0x00};
 
-int main(void) {
+int main(void)
+{
     SPI_Init();
 
-    Display_Init();
+    display_init();
 
     return 0;
 }
