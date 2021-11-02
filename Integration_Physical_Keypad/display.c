@@ -1,17 +1,17 @@
-#include <Display.h>
+#include <display.h>
 
-void Write_Data() {
+void write_data() {
     //DEN_HIGH;
     // transfer data
     //DEN_LOW;
 }
 
-void Display_Init() {
+void display_init() {
     //VDD on
     //AVDD on
     //STBYB OFF
 }
 
-void Update_Display() {
+void update_display() {
     return;
 }

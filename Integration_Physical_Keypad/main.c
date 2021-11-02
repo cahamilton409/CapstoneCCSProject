@@ -30,7 +30,14 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * --/COPYRIGHT--*/
 
+#include <audio.h>
+#include <display.h>
+#include <flash_memory.h>
+#include <key_press.h>
+#include <keypad.h>
+#include <status_fsm.h>
 #include <string.h>
+#include <hal.h>
 
 #include "driverlib.h"
 
@@ -40,54 +47,40 @@
 #include "USB_API/USB_HID_API/UsbHid.h"
 #include "USB_app/keyboard.h"
 
-#include "hal.h"
-#include "Audio.h"
-#include "Display.h"
-#include "FlashMem.h"
-#include "FSM.h"
-#include "KeyPress.h"
-#include "KeyPad.h"
 
-Button key;
+button_t key;
+status_fsm_t status_fsm;
+
 
 void main (void)
 {
     WDT_A_hold(WDT_A_BASE); // Stop watchdog timer
 
-    PMM_setVCore(PMM_CORE_LEVEL_3); // Minumum Vcore setting required for the USB API is PMM_CORE_LEVEL_2 .
-    USBHAL_initPorts();             // Config GPIOS for low-power (output low)
-    USBHAL_initClocks(25000000);     // Config clocks. MCLK=SMCLK=FLL=8MHz; ACLK=REFO=32kHz
-
-    Flash_Memory_Init();
-    Display_Init();
-    Audio_Init();
-    FSMType Key_Press_FSM;
-    Key_Press_FSM_Init(&Key_Press_FSM);
-    KeyPressInit();
+    clock_init(25000000);   // Config clocks. MCLK=SMCLK=FLL=25MHz; ACLK=REFO=32kHz
+    flash_memory_init();
+    display_init();
+    audio_init();
+    status_fsm_init(&status_fsm);
+    key_press_init();
 
     // ------------- Physical Keyboard --------------------------------
-    InitKeypad();
+    keypad_init();
     // ------------- Physical Keyboard --------------------------------
 
-    Keyboard_init();                // Init keyboard report
-    USB_setup(TRUE, TRUE);          // Init USB & events; if a host is present, connect
+    Keyboard_init();
+    USB_setup(TRUE, TRUE);
 
-    __enable_interrupt();  // Enable global interrupts
-
-
-
-
+    __enable_interrupt();
 
     while (1)
     {
         // ------------- Physical Keyboard --------------------------------
         key = switch_press_scan();
-        KeyPressInfo.KeyPressDetected = TRUE;
-        if ((key == SpanishTab) || (key == FrenchTab)) KeyPressInfo.Action = ChangePage;
-        else KeyPressInfo.Action = SendKey;
-        KeyPressInfo.PressedKey = key;
+        g_key_press_info.b_key_press_detected = TRUE;
+        if ((key == spanish_tab) || (key == french_tab)) {g_key_press_info.action = change_page;}
+        else {g_key_press_info.action = send_key;}
+        g_key_press_info.pressed_key = key;
         // ------------- Physical Keyboard --------------------------------
-
 
         // VERIFY THAT THE USB DEVICE IS PROPERLY CONNECTED.
         switch(USB_getConnectionState())
@@ -95,35 +88,35 @@ void main (void)
             // WWHEN THE USB DEVICE IS PROPERLY CONNECTED, HANDLE INPUTS
             case ST_ENUM_ACTIVE:
                 // IF THE DEVICE IS IDLE AND A KEY PRESS IS DETECTED, HANDLE IT ACCORDINGLY.
-                if (KeyPressInfo.KeyPressDetected && (Key_Press_FSM.CurrentState == Idle)) {
+                if (g_key_press_info.b_key_press_detected && (status_fsm.current_state == idle)) {
                     // CHANGE THE PAGE IF THE USER SELECTED ANOTHER TAB.
-                    if (KeyPressInfo.Action == ChangePage) {
-                        Key_Press_FSM.CurrentState = ChangePage;
-                        Play_Sound(ChangePage);
-                        ChangeCurrentLanguage(KeyPressInfo.PressedKey);
-                        Update_Display();
-                        Key_Press_FSM.CurrentState = Idle;
+                    if (g_key_press_info.action == change_page) {
+                        status_fsm.current_state = change_page;
+                        play_sound(change_page);
+                        change_current_language(g_key_press_info.pressed_key);
+                        update_display();
+                        status_fsm.current_state = idle;
                     }
 
                     // TYPE A KEY IF THE USER PRESSED A KEY.
-                    else if (KeyPressInfo.Action == SendKey) {
-                        Key_Press_FSM.CurrentState = SendKey;
-                        Play_Sound(SendKey);
-                        uint8_t SelectedCharacter = GetKeyFromButton(KeyPressInfo.PressedKey);
-                        SpecialKeyPress(SelectedCharacter);
-                        Key_Press_FSM.CurrentState = Idle;
+                    else if (g_key_press_info.action == send_key) {
+                        status_fsm.current_state = send_key;
+                        play_sound(send_key);
+                        uint8_t selected_character = get_key_from_button(g_key_press_info.pressed_key);
+                        special_key_press(selected_character);
+                        status_fsm.current_state = idle;
                     }
 
                     // REARRANGE A KEY IF A USER HELD DOWN A KEY.
-                    else if (KeyPressInfo.Action == MoveKey) {
-                        Key_Press_FSM.CurrentState = MoveKey;
-                        Play_Sound(MoveKey);
-                        MoveKeyToFront(KeyPressInfo.PressedKey);
-                        Update_Display();
-                        Key_Press_FSM.CurrentState = MoveKey;
+                    else if (g_key_press_info.action == move_key) {
+                        status_fsm.current_state = move_key;
+                        play_sound(move_key);
+                        move_key_to_front(g_key_press_info.pressed_key);
+                        update_display();
+                        status_fsm.current_state = move_key;
                     }
                 }
-                KeyPressInfo.KeyPressDetected = FALSE;
+                g_key_press_info.b_key_press_detected = FALSE;
                 break;
 
             // WHEN THE USB DEVICE IS NOT PROPERLY CONNECTED, DON'T HANDLE INPUTS.

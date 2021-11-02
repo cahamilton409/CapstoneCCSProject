@@ -5,14 +5,14 @@
  *      Author: Chris
  */
 
-#ifndef KEYPRESS_H_
-#define KEYPRESS_H_
+#ifndef KEY_PRESS_H_
+#define KEY_PRESS_H_
 
+#include <status_fsm.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include "USB_app/keyboard.h"
 
-#include "FSM.h"
 
 // Spanish Symbol Mappings.
 #define A_RIGHT_ACCENT                  'z'
@@ -49,43 +49,43 @@
 
 
 typedef enum {
-    French,
-    Spanish
-} Language;
+    french,
+    spanish
+} language_t;
 
 typedef enum {
-    Key1,
-    Key2,
-    Key3,
-    Key4,
-    Key5,
-    Key6,
-    Key7,
-    Key8,
-    Key9,
-    SpanishTab,
-    FrenchTab,
-    NoKey
-} Button;
+    key1,
+    key2,
+    key3,
+    key4,
+    key5,
+    key6,
+    key7,
+    key8,
+    key9,
+    spanish_tab,
+    french_tab,
+    no_key
+} button_t;
 
 typedef struct {
-    Button       PressedKey;            // Which key was pressed
-    FSMState     Action;                // How the key was pressed
-    uint8_t      KeyPressDetected;      // If a key press has been detected
-} KeyPressInfoType;
+    button_t       pressed_key;            // Which key was pressed
+    status_fms_state_t     action;                // How the key was pressed
+    uint8_t      b_key_press_detected;      // If a key press has been detected
+} key_press_info_type;
 
-extern const uint8_t SpanishCharacters [NUM_SPANISH_CHARACTERS];
-extern const uint8_t FrenchCharacters [NUM_FRENCH_CHARACTERS];
-extern volatile uint8_t keySendComplete;
-extern volatile KeyPressInfoType KeyPressInfo;
-extern volatile Language CurrentLanguage;
+extern const uint8_t g_spanish_characters [NUM_SPANISH_CHARACTERS];
+extern const uint8_t g_french_characters [NUM_FRENCH_CHARACTERS];
+extern volatile uint8_t g_key_send_complete;
+extern volatile key_press_info_type g_key_press_info;
+extern volatile language_t g_current_language;
 
-void KeyPressInit(void);
-void ChangeCurrentLanguage(Button SelectedTab);
-uint8_t GetKeyFromButton(Button PressedKey);
-void SpecialKeyPress(uint8_t c);
-void MoveKeyToFront(Button PressedKey);
-void UpdateLanguageLedIndicators(void);
+void key_press_init(void);
+void change_current_language(button_t selected_tab);
+uint8_t get_key_from_button(button_t pressed_key);
+void special_key_press(uint8_t mapped_character);
+void move_key_to_front(button_t pressed_key);
+void update_language_led_indicators(void);
 
 
-#endif /* KEYPRESS_H_ */
+#endif /* KEY_PRESS_H_ */
