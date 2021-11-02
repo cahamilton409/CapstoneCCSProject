@@ -56,8 +56,7 @@ void main (void)
 {
     WDT_A_hold(WDT_A_BASE); // Stop watchdog timer
 
-    clock_init(25000000);     // Config clocks. MCLK=SMCLK=FLL=8MHz; ACLK=REFO=32kHz
-
+    clock_init(25000000);   // Config clocks. MCLK=SMCLK=FLL=25MHz; ACLK=REFO=32kHz
     flash_memory_init();
     display_init();
     audio_init();
@@ -68,21 +67,20 @@ void main (void)
     keypad_init();
     // ------------- Physical Keyboard --------------------------------
 
-    Keyboard_init();                // Init keyboard report
-    USB_setup(TRUE, TRUE);          // Init USB & events; if a host is present, connect
+    Keyboard_init();
+    USB_setup(TRUE, TRUE);
 
-    __enable_interrupt();  // Enable global interrupts
+    __enable_interrupt();
 
     while (1)
     {
         // ------------- Physical Keyboard --------------------------------
         key = switch_press_scan();
-        g_key_press_info.key_press_detected = TRUE;
+        g_key_press_info.b_key_press_detected = TRUE;
         if ((key == spanish_tab) || (key == french_tab)) {g_key_press_info.action = change_page;}
         else {g_key_press_info.action = send_key;}
         g_key_press_info.pressed_key = key;
         // ------------- Physical Keyboard --------------------------------
-
 
         // VERIFY THAT THE USB DEVICE IS PROPERLY CONNECTED.
         switch(USB_getConnectionState())
@@ -90,7 +88,7 @@ void main (void)
             // WWHEN THE USB DEVICE IS PROPERLY CONNECTED, HANDLE INPUTS
             case ST_ENUM_ACTIVE:
                 // IF THE DEVICE IS IDLE AND A KEY PRESS IS DETECTED, HANDLE IT ACCORDINGLY.
-                if (g_key_press_info.key_press_detected && (status_fsm.current_state == idle)) {
+                if (g_key_press_info.b_key_press_detected && (status_fsm.current_state == idle)) {
                     // CHANGE THE PAGE IF THE USER SELECTED ANOTHER TAB.
                     if (g_key_press_info.action == change_page) {
                         status_fsm.current_state = change_page;
@@ -104,8 +102,8 @@ void main (void)
                     else if (g_key_press_info.action == send_key) {
                         status_fsm.current_state = send_key;
                         play_sound(send_key);
-                        uint8_t SelectedCharacter = get_key_from_button(g_key_press_info.pressed_key);
-                        special_key_press(SelectedCharacter);
+                        uint8_t selected_character = get_key_from_button(g_key_press_info.pressed_key);
+                        special_key_press(selected_character);
                         status_fsm.current_state = idle;
                     }
 
@@ -113,12 +111,12 @@ void main (void)
                     else if (g_key_press_info.action == move_key) {
                         status_fsm.current_state = move_key;
                         play_sound(move_key);
-                        MoveKeyToFront(g_key_press_info.pressed_key);
+                        move_key_to_front(g_key_press_info.pressed_key);
                         update_display();
                         status_fsm.current_state = move_key;
                     }
                 }
-                g_key_press_info.key_press_detected = FALSE;
+                g_key_press_info.b_key_press_detected = FALSE;
                 break;
 
             // WHEN THE USB DEVICE IS NOT PROPERLY CONNECTED, DON'T HANDLE INPUTS.

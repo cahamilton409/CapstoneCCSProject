@@ -11,18 +11,17 @@
 
 // Type Definitions
 typedef enum {
-    Idle,
-    ChangePage,
-    SendKey,
-    MoveKey,
-} FSMState;
+    idle,
+    change_page,
+    send_key,
+    move_key,
+} status_fms_state_t;
 
 typedef struct {
-    FSMState     CurrentState;      // Current state of the FSM
-} FSMType;
+    status_fms_state_t     current_state;      // Current state of the FSM
+} status_fsm_t;
 
 // Function Prototypes
-void Key_Press_FSM_Init(FSMType *FSM);
-void Change_State(FSMType *FSM, FSMState);
+void status_fsm_init(status_fsm_t *fsm);
 
 #endif /* STATUS_FSM_H_ */

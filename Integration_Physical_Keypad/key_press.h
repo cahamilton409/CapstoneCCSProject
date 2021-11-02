@@ -49,8 +49,8 @@
 
 
 typedef enum {
-    French,
-    Spanish
+    french,
+    spanish
 } language_t;
 
 typedef enum {
@@ -71,7 +71,7 @@ typedef enum {
 typedef struct {
     button_t       pressed_key;            // Which key was pressed
     status_fms_state_t     action;                // How the key was pressed
-    uint8_t      key_press_detected;      // If a key press has been detected
+    uint8_t      b_key_press_detected;      // If a key press has been detected
 } key_press_info_type;
 
 extern const uint8_t g_spanish_characters [NUM_SPANISH_CHARACTERS];
@@ -84,7 +84,7 @@ void key_press_init(void);
 void change_current_language(button_t selected_tab);
 uint8_t get_key_from_button(button_t pressed_key);
 void special_key_press(uint8_t mapped_character);
-void MoveKeyToFront(button_t pressed_key);
+void move_key_to_front(button_t pressed_key);
 void update_language_led_indicators(void);
 
 

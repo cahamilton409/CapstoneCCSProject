@@ -49,8 +49,8 @@ volatile key_press_info_type g_key_press_info;
 
 
 void key_press_init() {
-    g_key_press_info.key_press_detected = FALSE;
-    g_current_language = Spanish; // This will need to be changed to be the last language used.
+    g_key_press_info.b_key_press_detected = FALSE;
+    g_current_language = spanish; // This will need to be changed to be the last language used.
 
     // Use LEDs for tracking the current language
     GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
@@ -61,10 +61,10 @@ void key_press_init() {
 
 void change_current_language(button_t selected_tab) {
     if (selected_tab == french_tab) {
-        g_current_language = French;
+        g_current_language = french;
     }
     else if (selected_tab == spanish_tab) {
-        g_current_language = Spanish;
+        g_current_language = spanish;
     }
     update_language_led_indicators();
 
@@ -73,11 +73,11 @@ void change_current_language(button_t selected_tab) {
 
 // TODO This function will likely interact with the stored flash memory, and may be moved.
 uint8_t get_key_from_button(button_t pressed_key) {
-    if (g_current_language == Spanish) {
+    if (g_current_language == spanish) {
         return g_spanish_characters[pressed_key];
     }
 
-    if (g_current_language == French) {
+    if (g_current_language == french) {
         return g_french_characters[pressed_key];
     }
     return QUESTION_MARK_INVERTED;
@@ -105,12 +105,12 @@ void special_key_press(uint8_t mapped_character) {
 }
 
 // TODO This function will interact with the flash memory and may be moved.
-void MoveKeyToFront(button_t pressed_key) {
+void move_key_to_front(button_t pressed_key) {
     return;
 }
 
 void update_language_led_indicators(void){
-    if (g_current_language == Spanish) {
+    if (g_current_language == spanish) {
         GPIO_setOutputHighOnPin(GPIO_PORT_P1, GPIO_PIN0);
         GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN7);
     }
