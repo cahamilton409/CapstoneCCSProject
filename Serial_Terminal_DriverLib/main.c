@@ -37,7 +37,6 @@ void initClocks(uint32_t mclkFreq)
 //******************************************************************************
 
 
-//uint32_t i;
 uint32_t count = 0;
 char text[] = "I am an MSP432 lol\r\n";
 char clearscreen[] = "\r\n\n\n\n\n\n\n\n\n\n";
@@ -48,21 +47,19 @@ int main(void)
 {
   WDTCTL = WDTPW | WDTHOLD;                 // Stop Watchdog
 
-  PMM_setVCore(PMM_CORE_LEVEL_2); // Minumum Vcore setting required for the USB API is PMM_CORE_LEVEL_2 .
-  initClocks(16000000);
-//  initUART();
+  PMM_setVCore(PMM_CORE_LEVEL_3); // Minumum Vcore setting required for the USB API is PMM_CORE_LEVEL_2 .
+  initClocks(25000000);
   UART0_Init();
-//  volatile uint32_t i, j;        // volatile to prevent optimization
+  volatile uint32_t i;        // volatile to prevent optimization
 
   while(1){
-//      ser_output(text);
-//      UART0_OutUDec(count);
+      UART0_OutUDec(count);
 
       UART0_OutString(text);
-//      for(i=10000000; i>0; i--) {
-//      }
-//      count++;
-//      UART0_OutString(clearscreen);
+      for(i=5000000; i>0; i--) {
+      }
+      count++;
+      UART0_OutString(clearscreen);
 
   }
 }

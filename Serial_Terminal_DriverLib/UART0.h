@@ -120,3 +120,100 @@ void UART0_OutChar(char letter);
  */
 void UART0_OutString(char *pt);
 
+/**
+ * @details   Transmit a number as ASCII characters in unsigned decimal format
+ * @details   Variable format 1-10 digits with no space before or after
+ * @param  n is a unsigned 32-bit number to be transferred
+ * @return none
+ * @note   UART0_Init must be called once prior
+ * @brief  Transmit an unsigned number out of MSP432
+ */
+void UART0_OutUDec(uint32_t n);
+
+/**
+ * @details   Transmit a number as ASCII characters in signed decimal format
+ * @details   Variable format 1-10 digits with no space before or after
+ * @param  n is a signed 32-bit number to be transferred
+ * @return none
+ * @note   UART0_Init must be called once prior
+ * @brief  Transmit an unsigned number out of MSP432
+ */
+void UART0_OutSDec(int32_t n);
+
+
+/**
+ * @details   Transmit a number as ASCII characters in unsigned hexadecimal format
+ * @details   Variable format 1-8 digits with no space before or after
+ * @param  n is a unsigned 32-bit number to be transferred
+ * @return none
+ * @note   UART0_Init must be called once prior
+ * @brief  Transmit an unsigned number out of MSP432
+ */
+void UART0_OutUHex(uint32_t n);
+
+
+/**
+ * @details   Transmit a number as ASCII characters in unsigned hexadecimal format
+ * @details   Fixed format 2 digits with no space before or after
+ * @param  n is a unsigned 32-bit number to be transferred
+ * @return none
+ * @note   UART0_Init must be called once prior
+ * @warning only numbers from 0x00 to 0xFF will be properly displayed
+ * @brief  Transmit an unsigned number out of MSP432
+ */
+void UART0_OutUHex2(uint32_t n);
+
+/**
+ * @details   Transmit a number as ASCII characters in unsigned decimal format
+ * @details   Fixed format 4 digits with no space before or after
+ * @param  n is a unsigned 32-bit number to be transferred
+ * @return none
+ * @note   UART0_Init must be called once prior
+ * @note   Characters are aligned to right
+ * @warning only numbers from 0 to 9999 will be properly displayed
+ * @brief  Transmit an unsigned number out of MSP432
+ */
+void UART0_OutUDec4(uint32_t n);
+
+/**
+ * @details   Transmit a number as ASCII characters in unsigned decimal format
+ * @details   Fixed format 5 digits with no space before or after
+ * @param  n is a unsigned 32-bit number to be transferred
+ * @return none
+ * @note   UART0_Init must be called once prior
+ * @note   Characters are aligned to right
+ * @warning only numbers from 0 to 99999 will be properly displayed
+ * @brief  Transmit an unsigned number out of MSP432
+ */
+void UART0_OutUDec5(uint32_t n);
+
+/**
+ * @details   Transmit a number as ASCII characters in unsigned decimal fixed-point format
+ * @details   Fixed-format 3 or more character output with no space before or after
+ * @details   n    sends
+ * @details   0    "0.0"
+ * @details   5    "0.5"
+ * @details   12   "1.2"
+ * @details   999  "99.9"
+ * @param  n is a unsigned 32-bit number to be transferred
+ * @return none
+ * @note   UART0_Init must be called once prior
+ * @brief  Transmit an unsigned decimal fixed-point number out of MSP432
+ */
+void UART0_OutUFix1(uint32_t n);
+
+/**
+ * @details   Transmit a number as ASCII characters in unsigned decimal fixed-point format
+ * @details   Fixed-format 4 or more character output with no space before or after
+ * @details   n     sends
+ * @details   0     "0.00"
+ * @details   5     "0.05"
+ * @details   123   "1.23"
+ * @details   9999  "99.99"
+ * @param  n is a unsigned 32-bit number to be transferred
+ * @return none
+ * @note   UART0_Init must be called once prior
+ * @brief  Transmit an unsigned decimal fixed-point number out of MSP432
+ */
+void UART0_OutUFix2(uint32_t n);
+

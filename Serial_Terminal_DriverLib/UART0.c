@@ -65,10 +65,10 @@ void UART0_Init(void){
 
     UCA1CTLW0 |= UCSSEL__SMCLK;               // CLK = SMCLK
     // Baud Rate calculation
-    // 16000000/(16*115200) = 8.6805
+    // 25000000/(16*115200) = 13.6805
     // Fractional portion = 0.6805
     // Use Table 24-5 in Family User Guide
-    UCA1BR0 = 8;                               // 16000000/16/9600
+    UCA1BR0 = 13;                               // 25000000/16/9600
     UCA1BR1 = 0x00;
     UCA1MCTL |= UCOS16 | UCBRF_11 | UCBRS_0;
 
@@ -96,3 +96,163 @@ void UART0_OutString(char *pt){
   }
 }
 
+//-----------------------UART0_OutUDec-----------------------
+// Output a 32-bit number in unsigned decimal format
+// Input: 32-bit number to be transferred
+// Output: none
+// Variable format 1-10 digits with no space before or after
+void UART0_OutUDec(uint32_t n){
+// This function uses recursion to convert decimal number
+//   of unspecified length as an ASCII string
+  if(n >= 10){
+    UART0_OutUDec(n/10);
+    n = n%10;
+  }
+  UART0_OutChar(n+'0'); /* n is between 0 and 9 */
+}
+uint32_t Messageindexb;
+char Messageb[8];
+void static fillmessageb(uint32_t n){
+// This function uses recursion to convert decimal number
+//   of unspecified length as an ASCII string
+  if(n >= 10){
+    fillmessageb(n/10);
+    n = n%10;
+  }
+  Messageb[Messageindexb] = (n+'0'); /* n is between 0 and 9 */
+  if(Messageindexb<7)Messageindexb++;
+}
+void static fillmessage4b(uint32_t n){
+  if(n>=1000){  // 1000 to 9999
+    Messageindexb = 0;
+  } else if(n>=100){  // 100 to 999
+    Messageb[0] = ' ';
+    Messageindexb = 1;
+  }else if(n>=10){ //
+    Messageb[0] = ' '; /* n is between 10 and 99 */
+    Messageb[1] = ' ';
+    Messageindexb = 2;
+  }else{
+    Messageb[0] = ' '; /* n is between 0 and 9 */
+    Messageb[1] = ' ';
+    Messageb[2] = ' ';
+    Messageindexb = 3;
+  }
+  fillmessageb(n);
+}
+void static fillmessage5b(uint32_t n){
+  if(n>99999)n=99999;
+  if(n>=10000){  // 10000 to 99999
+    Messageindexb = 0;
+  } else if(n>=1000){  // 1000 to 9999
+    Messageb[0] = ' ';
+    Messageindexb = 1;
+  }else if(n>=100){  // 100 to 999
+    Messageb[0] = ' ';
+    Messageb[1] = ' ';
+    Messageindexb = 2;
+  }else if(n>=10){ //
+    Messageb[0] = ' '; /* n is between 10 and 99 */
+    Messageb[1] = ' ';
+    Messageb[2] = ' ';
+    Messageindexb = 3;
+  }else{
+    Messageb[0] = ' '; /* n is between 0 and 9 */
+    Messageb[1] = ' ';
+    Messageb[2] = ' ';
+    Messageb[3] = ' ';
+    Messageindexb = 4;
+  }
+  fillmessageb(n);
+}
+//-----------------------UART0_OutUDec4-----------------------
+// Output a 32-bit number in unsigned decimal format
+// Input: 32-bit number to be transferred
+// Output: none
+// Fixed format 4 digits with no space before or after
+void UART0_OutUDec4(uint32_t n){
+  if(n>9999){
+    UART0_OutString("****");
+  }else{
+    Messageindexb = 0;
+    fillmessage4b(n);
+    Messageb[Messageindexb] = 0; // terminate
+    UART0_OutString(Messageb);
+  }
+}
+//-----------------------UART0_OutUDec5-----------------------
+// Output a 32-bit number in unsigned decimal format
+// Input: 32-bit number to be transferred
+// Output: none
+// Fixed format 5 digits with no space before or after
+void UART0_OutUDec5(uint32_t n){
+  if(n>99999){
+    UART0_OutString("*****");
+  }else{
+    Messageindexb = 0;
+    fillmessage5b(n);
+    Messageb[Messageindexb] = 0; // terminate
+    UART0_OutString(Messageb);
+  }
+}
+//-----------------------UART0_OutUFix1-----------------------
+// Output a 32-bit number in unsigned decimal format
+// Input: 32-bit number to be transferred
+// Output: none
+// fixed format <digit>.<digit> with no space before or after
+void UART0_OutUFix1(uint32_t n){
+  UART0_OutUDec(n/10);
+  UART0_OutChar('.');
+  UART0_OutUDec(n%10);
+}
+//-----------------------UART0_OutUFix2-----------------------
+// Output a 32-bit number in unsigned decimal format
+// Input: 32-bit number to be transferred
+// Output: none
+// fixed format <digit>.<digit><digit> with no space before or after
+void UART0_OutUFix2(uint32_t n){
+  UART0_OutUDec(n/100);
+  UART0_OutChar('.');
+  n = n%100;
+  UART0_OutUDec(n/10);
+  UART0_OutUDec(n%10);
+}
+
+//--------------------------UART0_OutUHex----------------------------
+// Output a 32-bit number in unsigned hexadecimal format
+// Input: 32-bit number to be transferred
+// Output: none
+// Variable format 1 to 8 digits with no space before or after
+void UART0_OutUHex(uint32_t number){
+// This function uses recursion to convert the number of
+//   unspecified length as an ASCII string
+  if(number >= 0x10){
+    UART0_OutUHex(number/0x10);
+    UART0_OutUHex(number%0x10);
+  }
+  else{
+    if(number < 0xA){
+      UART0_OutChar(number+'0');
+     }
+    else{
+      UART0_OutChar((number-0x0A)+'A');
+    }
+  }
+}
+//--------------------------UART0_OutUHex2----------------------------
+// Output a 32-bit number in unsigned hexadecimal format
+// Input: 32-bit number to be transferred
+// Output: none
+// Fixed format 2 digits with no space before or after
+void outnibble(uint32_t n){
+    if(n < 0xA){
+   UART0_OutChar(n+'0');
+  }
+  else{
+    UART0_OutChar((n-0x0A)+'A');
+  }
+}
+void UART0_OutUHex2(uint32_t number){
+  outnibble(number/0x10); // ms digit
+  outnibble(number%0x10); // ls digit
+}
