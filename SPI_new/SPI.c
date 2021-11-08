@@ -407,7 +407,7 @@ void __attribute__ ((interrupt(USCI_A0_VECTOR))) USCI_A0_ISR (void)
                     MasterMode = RX_DATA_MODE;   // Need to start receiving now
                     //Send Dummy To Start
                     __delay_cycles(2000000);
-                    SendUCA0Data(DUMMY);
+                    //SendUCA0Data(DUMMY);
                 }
                 else
                 {

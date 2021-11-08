@@ -9,6 +9,9 @@
 //Runs through the LCD initialization routine.
 void display_init()
 {
+    P3DIR |= BIT6;
+    P3OUT |= BIT6;
+
     lcd_write_16(REG_HCYCLE, 548);
     lcd_write_16(REG_HOFFSET, 43);
     lcd_write_16(REG_HSYNC0, 0);
@@ -27,7 +30,13 @@ void display_init()
     lcd_write_32(RAM_DL + 4, 0x26111000);
     lcd_write_32(RAM_DL + 8, 0x00000000);
 
-    // add reads
+    lcd_write_8(REG_DLSWAP, 2);
+
+    uint8_t reg_gpio_dir = lcd_read_8(REG_GPIO_DIR);
+    lcd_write_8(REG_GPIO_DIR, 0x80 | reg_gpio_dir);
+
+    uint8_t reg_gpio = lcd_read_8(REG_GPIO);
+    lcd_write_8(REG_GPIO, 0x080 | reg_gpio);
 
     lcd_write_8(REG_PCLK, 5);
 
