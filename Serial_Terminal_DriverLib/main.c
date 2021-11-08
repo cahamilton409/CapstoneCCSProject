@@ -36,11 +36,12 @@ void initClocks(uint32_t mclkFreq)
 // the received character and echoes it.                                       *
 //******************************************************************************
 
-//uint32_t i;
+
 uint32_t count = 0;
-char text[] = "I am an MSP430\r\n";
+char text[] = "I am an MSP432 lol\r\n";
 char clearscreen[] = "\r\n\n\n\n\n\n\n\n\n\n";
 void ser_output(char *str);
+void initUART(void);
 
 int main(void)
 {
@@ -49,12 +50,13 @@ int main(void)
   PMM_setVCore(PMM_CORE_LEVEL_3); // Minumum Vcore setting required for the USB API is PMM_CORE_LEVEL_2 .
   initClocks(25000000);
   UART0_Init();
-  volatile uint32_t i, j;        // volatile to prevent optimization
+  volatile uint32_t i;        // volatile to prevent optimization
 
   while(1){
       UART0_OutUDec(count);
+
       UART0_OutString(text);
-      for(i=10000000; i>0; i--) {
+      for(i=5000000; i>0; i--) {
       }
       count++;
       UART0_OutString(clearscreen);
@@ -62,11 +64,6 @@ int main(void)
   }
 }
 
-void ser_output(char *str){
-    while(*str != 0) {
-        while (!(UCA1IFG & UCTXIFG));
-        UCA1TXBUF = *str++;
-        }
-}
+
 
 
