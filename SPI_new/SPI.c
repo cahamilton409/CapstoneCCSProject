@@ -82,17 +82,15 @@ SPI_Mode SPI_Master_WriteReg(uint8_t reg_addr, uint8_t *reg_data, uint8_t count)
     ReceiveIndex = 0;
     TransmitIndex = 0;
 
-    SLAVE_CS_OUT &= ~(SLAVE_CS_PIN);
     SendUCA0Data(TransmitRegAddr);
 
     __bis_SR_register(CPUOFF + GIE);              // Enter LPM0 w/ interrupts
 
-    SLAVE_CS_OUT |= SLAVE_CS_PIN;
-    return MasterMode;
+    return ReceiveBuffer;
 }
 
 //Reads over SPY from a register.
-SPI_Mode SPI_Master_ReadReg(uint8_t reg_addr, uint8_t count)
+uint8_t * SPI_Master_ReadReg(uint8_t reg_addr, uint8_t count)
 {
     MasterMode = TX_REG_ADDRESS_MODE;
     TransmitRegAddr = reg_addr;
@@ -101,13 +99,11 @@ SPI_Mode SPI_Master_ReadReg(uint8_t reg_addr, uint8_t count)
     ReceiveIndex = 0;
     TransmitIndex = 0;
 
-    SLAVE_CS_OUT &= ~(SLAVE_CS_PIN);
     SendUCA0Data(TransmitRegAddr);
 
     __bis_SR_register(CPUOFF + GIE);              // Enter LPM0 w/ interrupts
 
-    SLAVE_CS_OUT |= SLAVE_CS_PIN;
-    return MasterMode;
+    return ReceiveBuffer;
 }
 
 //Sends data to SPI buffer.

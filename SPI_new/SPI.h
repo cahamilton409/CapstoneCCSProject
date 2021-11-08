@@ -25,7 +25,7 @@ typedef enum SPI_ModeEnum{
 
 SPI_Mode SPI_Master_WriteReg(uint8_t reg_addr, uint8_t *reg_data, uint8_t count);
 SPI_Mode SPI_Master_Write(uint8_t *reg_data, uint8_t count);
-SPI_Mode SPI_Master_ReadReg(uint8_t reg_addr, uint8_t count);
+uint8_t * SPI_Master_ReadReg(uint8_t reg_addr, uint8_t count);
 void CopyArray(uint8_t *source, uint8_t *dest, uint8_t count);
 void SendUCA0Data(uint8_t val);
 void SPI_Init();

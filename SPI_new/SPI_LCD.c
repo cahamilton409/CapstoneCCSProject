@@ -7,6 +7,7 @@
 #include "SPI_LCD.h"
 
 const uint32_t write_base = 0x80302000;
+const uint32_t read_base = 0x00302000;
 const uint32_t zeros = 0x00000000;
 
 //Writes 32 bits to a specific register.
@@ -75,9 +76,65 @@ void lcd_write_8(uint16_t offset, uint8_t data_in)
 }
 
 //Reads a specific register of the LCD.
-void lcd_read()
+uint32_t lcd_read_32(uint16_t offset)
 {
+    CS_Off();
 
+    uint32_t address = read_base;                                 //grab base address
+    address |= offset;                                            //set offset bits of base
+    uint8_t address_broken[3] = {address >> 24, address >> 16,    //breaks 32 bit value into 4, 8 bit chunks
+                                 address >> 8};
+    SPI_Master_Write(address_broken, 3);                          //send desired address over SPI
+
+    uint8_t * buffer = SPI_Master_ReadReg(address, 4);
+    uint32_t return_val = zeros;
+    return_val |= (buffer[0] << 24);
+    return_val |= (buffer[1] << 16);
+    return_val |= (buffer[2] << 8);
+    return_val |= buffer[3];
+
+    CS_On();
+
+    return return_val;
+}
+
+uint16_t lcd_read_16(uint16_t offset)
+{
+    CS_Off();
+
+    uint32_t address = read_base;                                 //grab base address
+    address |= offset;                                            //set offset bits of base
+    uint8_t address_broken[2] = {address >> 24, address >> 16,    //breaks 32 bit value into 4, 8 bit chunks
+                                 address >> 8};
+    SPI_Master_Write(address_broken, 3);                          //send desired address over SPI
+
+    uint8_t * buffer = SPI_Master_ReadReg(address, 2);
+    uint16_t return_val = zeros;
+    return_val |= (buffer[0] << 8);
+    return_val |= buffer[1];
+
+    CS_On();
+
+    return return_val;
+}
+
+uint8_t lcd_read_8(uint16_t offset)
+{
+    CS_Off();
+
+    uint32_t address = read_base;                                 //grab base address
+    address |= offset;                                            //set offset bits of base
+    uint8_t address_broken[3] = {address >> 24, address >> 16,    //breaks 32 bit value into 4, 8 bit chunks
+                                 address >> 8};
+    SPI_Master_Write(address_broken, 3);                          //send desired address over SPI
+
+    uint8_t * buffer = SPI_Master_ReadReg(address, 4);
+    uint8_t return_val = zeros;
+    return_val |= buffer[0];
+
+    CS_On();
+
+    return return_val;
 }
 
 //Send a preset command to the LCD.
