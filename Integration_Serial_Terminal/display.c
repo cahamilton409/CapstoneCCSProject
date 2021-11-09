@@ -35,31 +35,31 @@ void update_display() {
             current_char = g_spanish_characters[i];
             switch (current_char) {
             case (A_RIGHT_ACCENT):
-                UART0_OutString("á right accent");
+                UART0_OutString("á");
                 break;
             case (E_RIGHT_ACCENT):
-                UART0_OutString("e right accent");
+                UART0_OutString("é");
                 break;
             case (I_RIGHT_ACCENT):
-                UART0_OutString("i right accent");
+                UART0_OutString("í");
                 break;
             case (O_RIGHT_ACCENT):
-                UART0_OutString("o right accent");
+                UART0_OutString("ó");
                 break;
             case (U_RIGHT_ACCENT):
-                UART0_OutString("u right accent");
+                UART0_OutString("ú");
                 break;
             case (U_DIAERESIS):
-                UART0_OutString("u diaeresis  ");
+                UART0_OutString("ü");
                 break;
             case (N_TENUTO):
-                UART0_OutString("n tenuto     ");
+                UART0_OutString("ñ");
                 break;
             case (QUESTION_MARK_INVERTED):
-                UART0_OutString("? inverted   ");
+                UART0_OutString("¿");
                 break;
             case (EXCLAMATION_POINT_INVERTED):
-                UART0_OutString("! inverted    ");
+                UART0_OutString("¡");
                 break;
             }
         }
@@ -68,52 +68,52 @@ void update_display() {
             current_char = g_french_characters[i];
             switch (current_char) {
             case (A_LEFT_ACCENT):
-                UART0_OutString("a left accent");
+                UART0_OutString("à");
                 break;
             case (A_CARET):
-                UART0_OutString("a caret      ");
+                UART0_OutString("â");
                 break;
             case (E_RIGHT_ACCENT):
-                UART0_OutString("e right accent");
+                UART0_OutString("é");
                 break;
             case (E_LEFT_ACCENT):
-                UART0_OutString("e left accent");
+                UART0_OutString("è");
                 break;
             case (E_CARET):
-                UART0_OutString("e caret      ");
+                UART0_OutString("ê");
                 break;
             case (E_DIAERESIS):
-                UART0_OutString("e diaeresis  ");
+                UART0_OutString("ë");
                 break;
             case (I_DIAERESIS):
-                UART0_OutString("i diaeresis  ");
+                UART0_OutString("ï");
                 break;
             case (I_CARET):
-                UART0_OutString("i caret      ");
+                UART0_OutString("î");
                 break;
             case (O_CARET):
-                UART0_OutString("o caret      ");
+                UART0_OutString("ô");
                 break;
             case (U_LEFT_ACCENT):
-                UART0_OutString("u left accent");
+                UART0_OutString("ù");
                 break;
             case (U_CARET):
-                UART0_OutString("u caret      ");
+                UART0_OutString("û");
                 break;
             case (U_DIAERESIS):
-                UART0_OutString("u diaeresis  ");
+                UART0_OutString("ü");
                 break;
             case (C_CEDILLA):
-                UART0_OutString("c cedilla    ");
+                UART0_OutString("ç");
                 break;
             case (Y_DIAERESIS):
-                UART0_OutString("y diaeresis  ");
+                UART0_OutString("ÿ");
                 break;
             case (AE):
-                UART0_OutString("ae           ");
+                UART0_OutString("æ");
                 break;
             case (OE):
-                UART0_OutString("oe           ");
+                UART0_OutString("œ");
                 break;
             }
 
