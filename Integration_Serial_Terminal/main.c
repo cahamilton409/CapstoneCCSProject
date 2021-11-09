@@ -58,10 +58,11 @@ void main (void)
 
     clock_init(25000000);   // Config clocks. MCLK=SMCLK=FLL=25MHz; ACLK=REFO=32kHz
     flash_memory_init();
-    display_init();
     audio_init();
     status_fsm_init(&status_fsm);
     key_press_init();
+    display_init();
+
 
     // ------------- Physical Keyboard --------------------------------
     keypad_init();
