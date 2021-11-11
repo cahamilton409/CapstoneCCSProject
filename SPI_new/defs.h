@@ -24,6 +24,8 @@
 #define REG_GPIO        0x94
 #define REG_PCLK        0x70
 #define RAM_DL          0x100
+#define REG_GPIO        0x90
+#define REG_GPIO_DIR    0x98
 
 //Below are the different params of begin() commands for the LCD.
 #define BITMAPS         1
