@@ -67,77 +67,148 @@
 #include <msp430.h>
 #include <stdint.h>
 
-char value;                                 // 8-bit value to write to seg C
+// Spanish Symbol Mappings.
+#define A_RIGHT_ACCENT                  'z'
+#define E_RIGHT_ACCENT                  'x'
+#define I_RIGHT_ACCENT                  'c'
+#define O_RIGHT_ACCENT                  'v'
+#define U_RIGHT_ACCENT                  'b'
+#define U_DIAERESIS                     'n'
+#define N_TENUTO                        'm'
+#define QUESTION_MARK_INVERTED          ','
+#define EXCLAMATION_POINT_INVERTED      '.'
+
+// French Symbol Mappings.
+#define A_LEFT_ACCENT                   '1'
+#define A_CARET                         '2'
+//#define E_RIGHT_ACCENT                '3'
+#define E_LEFT_ACCENT                   '4'
+#define E_CARET                         '5'
+#define E_DIAERESIS                     '6'
+#define I_DIAERESIS                     '7'
+#define I_CARET                         '8'
+#define O_CARET                         '9'
+#define U_LEFT_ACCENT                   '0'
+#define U_CARET                         '-'
+//#define U_DIAERESIS                   '='
+#define C_CEDILLA                       'q'
+#define Y_DIAERESIS                     'w'
+#define AE                              'e'
+#define OE                              'r'
+
+#define NUM_SPANISH_CHARACTERS 9
+#define NUM_FRENCH_CHARACTERS 16
+
+const uint8_t g_spanish_characters[NUM_SPANISH_CHARACTERS] = {
+    A_RIGHT_ACCENT,
+    E_RIGHT_ACCENT,
+    I_RIGHT_ACCENT,
+    O_RIGHT_ACCENT,
+    U_RIGHT_ACCENT,
+    U_DIAERESIS,
+    N_TENUTO,
+    QUESTION_MARK_INVERTED,
+    EXCLAMATION_POINT_INVERTED};
+
+const uint8_t g_french_characters [NUM_FRENCH_CHARACTERS] = {
+    A_LEFT_ACCENT,
+    A_CARET,
+    E_RIGHT_ACCENT,
+    E_LEFT_ACCENT,
+    E_CARET,
+    E_DIAERESIS,
+    I_DIAERESIS,
+    I_CARET,
+    O_CARET,
+    U_LEFT_ACCENT,
+    U_CARET,
+    U_DIAERESIS,
+    C_CEDILLA,
+    Y_DIAERESIS,
+    AE,
+    OE};
+
+
+
 
 // Function prototypes
-void write_SegC(char value);
-void copy_C2D(void);
+void init_mappings();
+void save_mappings();
+void load_mappings();
 
+
+uint8_t g_spanish_mappings[NUM_SPANISH_CHARACTERS];
+uint8_t g_french_mappings[NUM_FRENCH_CHARACTERS];
 uint8_t i;
 uint8_t read_val = 0;
 uint8_t *addr = (uint8_t *) 0x1800;
 int main(void)
 {
   WDTCTL = WDTPW+WDTHOLD;                   // Stop WDT
-  value = 0x00;                                // initialize value
-  write_SegC(value);                    // Write segment C, increment value
-  copy_C2D();                             // Copy segment C to D
+  init_mappings();
+  save_mappings();
+  for (i = 0; i < NUM_SPANISH_CHARACTERS; i++) {
+      g_spanish_mappings[i] = 0;
+  }
+  for (i = 0; i < NUM_FRENCH_CHARACTERS; i++) {
+      g_french_mappings[i] = 0;
+  }
+  load_mappings();
+
   for (i = 0; i < 128; i++) {
       read_val = addr[i];
   }
   while(1)
   {
 
-    __no_operation();                       // Loop forever, SET BREAKPOINT HERE
+    __no_operation();
   }
 }
 
-//------------------------------------------------------------------------------
-// Input = value, holds value to write to Seg C
-//------------------------------------------------------------------------------
-void write_SegC(char value)
+
+void save_mappings()
 {
   unsigned int i;
   char * Flash_ptr;                         // Initialize Flash pointer
-  Flash_ptr = (char *) 0x1880;
+  Flash_ptr = (char *) 0x1800;
   FCTL3 = FWKEY;                            // Clear Lock bit
   FCTL1 = FWKEY+ERASE;                      // Set Erase bit
   *Flash_ptr = 0;                           // Dummy write to erase Flash seg
   FCTL1 = FWKEY+WRT;                        // Set WRT bit for write operation
 
-  for (i = 0; i < 128; i++)
+  for (i = 0; i < NUM_SPANISH_CHARACTERS; i++)
   {
-    *Flash_ptr++ = value++;                   // Write value to flash
+    *Flash_ptr++ = g_spanish_mappings[i];                   // Write value to flash
+  }
+  for (i = 0; i < NUM_FRENCH_CHARACTERS; i++) {
+      *Flash_ptr++ = g_french_mappings[i];
   }
   FCTL1 = FWKEY;                            // Clear WRT bit
   FCTL3 = FWKEY+LOCK;                       // Set LOCK bit
 }
 
-//------------------------------------------------------------------------------
-// Copy Seg C to Seg D
-//------------------------------------------------------------------------------
-void copy_C2D(void)
+void load_mappings()
 {
-  unsigned int i;
-  char *Flash_ptrC;
-  char *Flash_ptrD;
+    unsigned int i;
+    char * Flash_ptr;                         // Initialize Flash pointer
+    Flash_ptr = (char *) 0x1800;
+    for (i = 0; i < NUM_SPANISH_CHARACTERS; i++) {
+        g_spanish_mappings[i] = *Flash_ptr++;
+    }
+    for (i = 0; i < NUM_FRENCH_CHARACTERS; i++) {
+        g_french_mappings[i] = *Flash_ptr++;
+    }
+}
 
-  Flash_ptrC = (char *) 0x1880;             // Initialize Flash segment C ptr
-  Flash_ptrD = (char *) 0x1800;             // Initialize Flash segment D ptr
 
-  __disable_interrupt();                    // Errata bug FLASH31 Workaround (this instruction can be removed if no FLASH31 bug affected): Disable global
-                                            // interrupt while erasing. Re-Enable
-                                            // GIE if needed
-  FCTL3 = FWKEY;                            // Clear Lock bit
-  FCTL1 = FWKEY+ERASE;                      // Set Erase bit
-  *Flash_ptrD = 0;                          // Dummy write to erase Flash seg D
-  FCTL1 = FWKEY+WRT;                        // Set WRT bit for write operation
 
-  for (i = 0; i < 128; i++)
-  {
-    *Flash_ptrD++ = *Flash_ptrC++;          // copy value segment C to seg D
-  }
-
-  FCTL1 = FWKEY;                            // Clear WRT bit
-  FCTL3 = FWKEY+LOCK;                       // Set LOCK bit
+void init_mappings() {
+    // Populate the language mappings.
+    uint8_t i;
+    for (i = 0; i<NUM_SPANISH_CHARACTERS; i++) {
+        g_spanish_mappings[i] = g_spanish_characters[i];
+    }
+    for (i = 0; i<NUM_FRENCH_CHARACTERS; i++) {
+        g_french_mappings[i] = g_french_characters[i];
+    }
 }
