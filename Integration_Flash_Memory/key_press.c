@@ -13,6 +13,8 @@
 #include "USB_API/USB_Common/usb.h"
 #include "USB_app/keyboard.h"
 
+#include "flash_memory.h"
+
 //
 const uint8_t g_spanish_characters[NUM_SPANISH_CHARACTERS] = {
     A_RIGHT_ACCENT,
@@ -54,15 +56,6 @@ volatile uint8_t g_french_mappings[NUM_FRENCH_CHARACTERS];
 void key_press_init() {
     g_key_press_info.b_key_press_detected = FALSE;
     g_current_language = spanish; // This will need to be changed to be the last language used.
-
-    // Populate the language mappings.
-    uint8_t i;
-    for (i = 0; i<NUM_SPANISH_CHARACTERS; i++) {
-        g_spanish_mappings[i] = g_spanish_characters[i];
-    }
-    for (i = 0; i<NUM_FRENCH_CHARACTERS; i++) {
-        g_french_mappings[i] = g_french_characters[i];
-    }
 
     // Use LEDs for tracking the current language
     GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
@@ -146,12 +139,8 @@ void special_key_press(uint8_t mapped_character) {
 // Rearrange the keys so that the selected key is displayed first.
 // TODO This function will interact with the flash memory and may be moved.
 void move_key_to_front(button_t pressed_key) {
-//    // Translate the key number based on the page number.
-//    uint8_t pressed_key_num;
-//    if
-
-
     uint8_t i;
+    // SHIFT THE SPANISH MAPPINGS IF THE CURRENT LANGUAGE IS SPANISH.
     if (g_current_language == spanish) {
 
         // CREATE A COPY OF THE MAPPING.
@@ -168,6 +157,7 @@ void move_key_to_front(button_t pressed_key) {
         }
     }
 
+    // SHIFT THE FRENCH MAPPINGS IF THE CURRENT LANGUAGE IS FRENCH.
     if ((g_current_language == french_page1) || (g_current_language == french_page2)) {
         // CREATE A COPY OF THE MAPPING.
         uint8_t old_mappings[NUM_FRENCH_CHARACTERS];
@@ -192,12 +182,11 @@ void move_key_to_front(button_t pressed_key) {
             g_french_mappings[i+1] = old_mappings[i];
         }
 
-//        button_t key_index;
-//        for (key_index = key1; key_index < pressed_key; key_index++) {
-//            g_french_mappings[key_index+1] = old_mappings[key_index];
-//        }
-
     }
+
+    // SAVE THE CHANGES TO MEMORY.
+    save_mappings;
+
 }
 
 // Update the on-board LEDs to reflect the current language.

@@ -57,11 +57,12 @@ void main (void)
     WDT_A_hold(WDT_A_BASE); // Stop watchdog timer
 
     clock_init(25000000);   // Config clocks. MCLK=SMCLK=FLL=25MHz; ACLK=REFO=32kHz
-    flash_memory_init();
     audio_init();
     status_fsm_init(&status_fsm);
     key_press_init();
+    flash_memory_init();
     display_init();
+
 
 
     // ------------- Physical Keyboard --------------------------------
