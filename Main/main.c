@@ -82,6 +82,9 @@ void main (void)
         {
             g_key_press_info.action = change_page;
         }
+        else if (g_time_elapsed > 300000) {
+            g_key_press_info.action = move_key;
+        }
         else
         {
             g_key_press_info.action = send_key;
@@ -123,7 +126,7 @@ void main (void)
                         play_sound(move_key);
                         move_key_to_front(g_key_press_info.pressed_key);
                         update_display();
-                        status_fsm.current_state = move_key;
+                        status_fsm.current_state = idle;
                     }
                 }
                 g_key_press_info.b_key_press_detected = FALSE;

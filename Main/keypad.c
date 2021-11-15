@@ -2,6 +2,8 @@
 #include <keypad.h>
 #include "driverlib.h"
 
+volatile uint32_t g_time_elapsed;
+
 // Configure the GPIO ports for the physical keypad.
 void keypad_init(void)
 {
@@ -49,19 +51,31 @@ button_t keypad_scanner(void)
     X4_HIGH;
     if (Y1_IN == 0) {
         for(i=DEBOUNCE_DELAY_IN_TICKS;i>0; i--);
-        while (Y1_IN==0);
+        g_time_elapsed = 0;
+        while (Y1_IN==0) {
+            g_time_elapsed++;
+        }
         return key1;}
     if (Y2_IN == 0) {
         for(i=DEBOUNCE_DELAY_IN_TICKS; i>0; i--);
-        while (Y2_IN==0);
+        g_time_elapsed = 0;
+        while (Y2_IN==0) {
+            g_time_elapsed++;
+        }
         return key2; }
     if (Y3_IN == 0) {
         for(i=DEBOUNCE_DELAY_IN_TICKS; i>0; i--);
-        while (Y3_IN==0);
+        g_time_elapsed = 0;
+        while (Y3_IN==0) {
+            g_time_elapsed++;
+        }
         return key3; }
     if (Y4_IN == 0) {
         for(i=DEBOUNCE_DELAY_IN_TICKS; i>0; i--);
-        while (Y4_IN==0);
+        g_time_elapsed = 0;
+        while (Y4_IN==0) {
+            g_time_elapsed++;
+        }
         return spanish_tab; }
 
     // SCAN THE SECOND ROW OF KEYS.
@@ -71,19 +85,31 @@ button_t keypad_scanner(void)
     X4_HIGH;
     if (Y1_IN == 0) {
         for(i=DEBOUNCE_DELAY_IN_TICKS; i>0; i--);
-        while (Y1_IN==0);
+        g_time_elapsed = 0;
+        while (Y1_IN==0) {
+            g_time_elapsed++;
+        }
         return key4; }
     if (Y2_IN == 0) {
         for(i=DEBOUNCE_DELAY_IN_TICKS; i>0; i--);
-        while (Y2_IN==0);
+        g_time_elapsed = 0;
+        while (Y2_IN==0) {
+            g_time_elapsed++;
+        }
         return key5; }
     if (Y3_IN == 0) {
         for(i=DEBOUNCE_DELAY_IN_TICKS; i>0; i--);
-        while (Y3_IN==0);
+        g_time_elapsed = 0;
+        while (Y3_IN==0) {
+            g_time_elapsed++;
+        }
         return key6; }
     if (Y4_IN == 0) {
         for(i=DEBOUNCE_DELAY_IN_TICKS; i>0; i--);
-        while (Y4_IN==0);
+        g_time_elapsed = 0;
+        while (Y4_IN==0) {
+            g_time_elapsed++;
+        }
         return french_tab; }
 
     // SCAN THE THIRD ROW OF KEYS.
@@ -93,19 +119,31 @@ button_t keypad_scanner(void)
     X4_HIGH;
     if (Y1_IN == 0) {
         for(i=DEBOUNCE_DELAY_IN_TICKS; i>0; i--);
-        while (Y1_IN==0);
+        g_time_elapsed = 0;
+        while (Y1_IN==0) {
+            g_time_elapsed++;
+        }
         return key7; }
     if (Y2_IN == 0) {
         for(i=DEBOUNCE_DELAY_IN_TICKS; i>0; i--);
-        while (Y2_IN==0);
+        g_time_elapsed = 0;
+        while (Y2_IN==0) {
+            g_time_elapsed++;
+        }
         return key8; }
     if (Y3_IN == 0) {
         for(i=DEBOUNCE_DELAY_IN_TICKS; i>0; i--);
-        while (Y3_IN==0);
+        g_time_elapsed = 0;
+        while (Y3_IN==0) {
+            g_time_elapsed++;
+        }
         return key9; }
     if (Y4_IN == 0) {
         for(i=DEBOUNCE_DELAY_IN_TICKS; i>0; i--);
-        while (Y4_IN==0);
+        g_time_elapsed = 0;
+        while (Y4_IN==0) {
+            g_time_elapsed++;
+        }
         return no_key; }
 
     // SCAN THE FOURTH ROW OF KEYS.
@@ -115,19 +153,31 @@ button_t keypad_scanner(void)
     X4_LOW;
     if (Y1_IN == 0) {
         for(i=DEBOUNCE_DELAY_IN_TICKS; i>0; i--);
-        while (Y1_IN==0);
+        g_time_elapsed = 0;
+        while (Y1_IN==0) {
+            g_time_elapsed++;
+        }
         return no_key; }
     if (Y2_IN == 0) {
         for(i=DEBOUNCE_DELAY_IN_TICKS; i>0; i--);
-        while (Y2_IN==0);
+        g_time_elapsed = 0;
+        while (Y2_IN==0) {
+            g_time_elapsed++;
+        }
         return no_key; }
     if (Y3_IN == 0) {
         for(i=DEBOUNCE_DELAY_IN_TICKS; i>0; i--);
-        while (Y3_IN==0);
+        g_time_elapsed = 0;
+        while (Y3_IN==0) {
+            g_time_elapsed++;
+        }
         return no_key; }
     if (Y4_IN == 0) {
         for(i=DEBOUNCE_DELAY_IN_TICKS; i>0; i--);
-        while (Y4_IN==0);
+        g_time_elapsed = 0;
+        while (Y4_IN==0) {
+            g_time_elapsed++;
+        }
         return no_key; }
 
     return no_key;

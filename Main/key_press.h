@@ -49,8 +49,9 @@
 
 
 typedef enum {
-    french,
-    spanish
+    spanish,
+    french_page1,
+    french_page2
 } language_t;
 
 typedef enum {
@@ -80,12 +81,17 @@ extern volatile uint8_t g_key_send_complete;
 extern volatile key_press_info_type g_key_press_info;
 extern volatile language_t g_current_language;
 
+extern volatile uint8_t g_spanish_mappings[NUM_SPANISH_CHARACTERS];
+extern volatile uint8_t g_french_mappings[NUM_FRENCH_CHARACTERS];
+
 void key_press_init(void);
 void change_current_language(button_t selected_tab);
 uint8_t get_key_from_button(button_t pressed_key);
 void special_key_press(uint8_t mapped_character);
 void move_key_to_front(button_t pressed_key);
 void update_language_led_indicators(void);
+//void shift_key_to_front(button_t key);
+
 
 
 #endif /* KEY_PRESS_H_ */

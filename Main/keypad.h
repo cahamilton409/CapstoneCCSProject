@@ -49,6 +49,8 @@
 #define Y4_PIN  GPIO_PIN5
 #define Y4_IN   GPIO_getInputPinValue(Y4_PORT, Y4_PIN)
 
+extern volatile uint32_t g_time_elapsed;
+
 button_t switch_press_scan(void);
 
 void keypad_init(void);
