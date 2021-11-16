@@ -184,9 +184,6 @@ void move_key_to_front(button_t pressed_key) {
 
     }
 
-    // SAVE THE CHANGES TO MEMORY.
-    save_mappings;
-
 }
 
 // Update the on-board LEDs to reflect the current language.

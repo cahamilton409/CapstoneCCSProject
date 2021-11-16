@@ -126,6 +126,7 @@ void main (void)
                         status_fsm.current_state = move_key;
                         play_sound(move_key);
                         move_key_to_front(g_key_press_info.pressed_key);
+                        save_mappings();
                         update_display();
                         status_fsm.current_state = idle;
                     }

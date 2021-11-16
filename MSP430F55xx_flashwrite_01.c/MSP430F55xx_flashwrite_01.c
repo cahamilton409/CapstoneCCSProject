@@ -100,6 +100,7 @@
 #define NUM_FRENCH_CHARACTERS 16
 
 const uint8_t g_spanish_characters[NUM_SPANISH_CHARACTERS] = {
+    QUESTION_MARK_INVERTED,
     A_RIGHT_ACCENT,
     E_RIGHT_ACCENT,
     I_RIGHT_ACCENT,
@@ -107,7 +108,6 @@ const uint8_t g_spanish_characters[NUM_SPANISH_CHARACTERS] = {
     U_RIGHT_ACCENT,
     U_DIAERESIS,
     N_TENUTO,
-    QUESTION_MARK_INVERTED,
     EXCLAMATION_POINT_INVERTED};
 
 const uint8_t g_french_characters [NUM_FRENCH_CHARACTERS] = {
@@ -147,6 +147,12 @@ int main(void)
   WDTCTL = WDTPW+WDTHOLD;                   // Stop WDT
   init_mappings();
   save_mappings();
+  save_mappings();
+  save_mappings();
+  save_mappings();
+  save_mappings();
+  save_mappings();
+
   for (i = 0; i < NUM_SPANISH_CHARACTERS; i++) {
       g_spanish_mappings[i] = 0;
   }
