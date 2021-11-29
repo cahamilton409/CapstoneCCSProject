@@ -1,1 +1,0 @@
-"./example/eve_calibrate.obj" "./example/eve_example.obj" "./example/eve_fonts.obj" "./example/eve_helper.obj" "./example/eve_images.obj" "./lib/eve/eve_arch_msp430/EVE_MCU_MSP430.obj" "./lib/eve/source/EVE_API.obj" "./lib/eve/source/EVE_HAL.obj" "./lib/eve/source/EVE_HAL_Linux.obj" "./main/main.obj" "../lnk_msp430f5529.cmd" -llibc.a -llibmath.a 
