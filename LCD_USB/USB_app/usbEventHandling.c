@@ -58,7 +58,7 @@
 #include "USB_API/USB_PHDC_API/UsbPHDC.h"
 #endif
 
-extern volatile uint8_t keySendComplete;
+extern volatile uint8_t g_key_send_complete;
 
 /*
  * If this function gets executed, it's a sign that the output of the USB PLL has failed.
@@ -251,7 +251,7 @@ uint8_t USBHID_handleDataReceived (uint8_t intfNum)
  */
 uint8_t USBHID_handleSendCompleted (uint8_t intfNum)
 {
-    keySendComplete = TRUE;
+    g_key_send_complete = TRUE;
 
     return (TRUE);     //return FALSE to go asleep after interrupt (in the case the CPU slept before interrupt)
 }

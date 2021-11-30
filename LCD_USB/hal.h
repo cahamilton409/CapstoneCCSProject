@@ -35,38 +35,6 @@
  * Device and board specific pins need to be configured here
  *
  */
-
-// Only one of the following board defines should be enabled!
-#define MSP430F5529LP       // F5529 LaunchPad
-//#define MSPEXP430F5529     // F5529 Experimenters Board
-//#define MSPTS430PN80USB    // FET target board
-//#define MSPTS430RGC64USB   // FET target board
-//#define MSPTS430PZ100USB   // FET target board
-
-
-#ifdef MSPEXP430F5529
-#define BUTTON1_PORT	GPIO_PORT_P1
-#define BUTTON1_PIN		GPIO_PIN7
-#define BUTTON1_VECTOR	PORT1_VECTOR
-#define INTERRUPT_PIN   GPIO_PIN6
-
-#define BUTTON2_PORT	GPIO_PORT_P2
-#define BUTTON2_PIN		GPIO_PIN2
-#define BUTTON2_VECTOR	PORT2_VECTOR
-#endif
-
-#if defined (MSPTS430RGC64USB) || defined (MSPTS430PN80USB)  || defined (MSPTS430PZ100USB)
-#define BUTTON1_PORT	GPIO_PORT_P1
-#define BUTTON1_PIN		GPIO_PIN6
-#define BUTTON1_VECTOR	PORT1_VECTOR
-#define INTERRUPT_PIN   GPIO_PIN1
-
-#define BUTTON2_PORT	GPIO_PORT_P1
-#define BUTTON2_PIN		GPIO_PIN7
-#define BUTTON2_VECTOR	PORT1_VECTOR
-#endif
-
-#ifdef MSP430F5529LP
 #define BUTTON1_PORT	GPIO_PORT_P1
 #define BUTTON1_PIN		GPIO_PIN1
 #define BUTTON1_VECTOR	PORT1_VECTOR
@@ -75,21 +43,8 @@
 #define BUTTON2_PORT	GPIO_PORT_P2
 #define BUTTON2_PIN		GPIO_PIN1
 #define BUTTON2_VECTOR	PORT2_VECTOR
-#endif
-
-
-/*----------------------------------------------------------------------------
- * The following function names are deprecated.  These were updated to new 
- * names to follow OneMCU naming convention.
- +---------------------------------------------------------------------------*/
-
-#ifndef DEPRECATED
-#define   initPorts       USBHAL_initPorts
-#define   initClocks      USBHAL_initClocks
-#define   initButtons     USBHAL_initButtons
-#endif
 
 void USBHAL_initPorts(void);
-void USBHAL_initClocks(uint32_t mclkFreq);
+void clock_init(uint32_t mclkFreq);
 void USBHAL_initButtons(void);
 //Released_Version_5_20_06_02
