@@ -61,12 +61,16 @@ void main (void)
     status_fsm_init(&status_fsm);
     key_press_init();
     flash_memory_init();
-    display_init();
+
+    uint32_t font_end;
+    EVE_Init();
+    font_end = eve_init_fonts();
+    eve_load_images(font_end);
 
 
 
     // ------------- Physical Keyboard --------------------------------
-    keypad_init();
+    //keypad_init();
     // ------------- Physical Keyboard --------------------------------
 
     Keyboard_init();
@@ -77,20 +81,8 @@ void main (void)
     while (1)
     {
         // ------------- Physical Keyboard --------------------------------
-        key = switch_press_scan();
-        g_key_press_info.b_key_press_detected = TRUE;
-        if ((key == spanish_tab) || (key == french_tab))
-        {
-            g_key_press_info.action = change_page;
-        }
-        else if (g_time_elapsed > 300000) {
-            g_key_press_info.action = move_key;
-        }
-        else
-        {
-            g_key_press_info.action = send_key;
-        }
-        g_key_press_info.pressed_key = key;
+        void wait_for_touch();
+        void handle_touch();
         // ------------- Physical Keyboard --------------------------------
 
         // VERIFY THAT THE USB DEVICE IS PROPERLY CONNECTED.
@@ -106,7 +98,6 @@ void main (void)
                         status_fsm.current_state = change_page;
                         play_sound(change_page);
                         change_current_language(g_key_press_info.pressed_key);
-                        update_display();
                         status_fsm.current_state = idle;
                     }
 
@@ -127,7 +118,6 @@ void main (void)
                         play_sound(move_key);
                         move_key_to_front(g_key_press_info.pressed_key);
                         save_mappings();
-                        update_display();
                         status_fsm.current_state = idle;
                     }
                 }

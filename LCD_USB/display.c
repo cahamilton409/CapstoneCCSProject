@@ -1,155 +1,123 @@
 #include <display.h>
 #include "key_press.h"
 #include "UART0.h"
+#include <stdint.h>
 
-char clearscreen[] = "\r\n\n\n\n\n\n\n\n\n\n";
+#include "lib/eve/include/EVE.h"
+#include "lib/eve/include/HAL.h"
+#include "MCU.h"
+#include <string.h>
+#include "keypad.h"
 
+const uint16_t x_buttons[9] = {80,240,400,80,240,400,80,240,400};
+const uint16_t y_buttons[9] = {300,300,300,500,500,500,700,700,700};
+char * french[9] = {"a","b","c","d","e","f","g","h","i"};
+char * spanish_arr[9] = {"1","2","3","4","5","6","7","8","9"};
+const uint16_t height = 120;
+const uint16_t width = 120;
+const uint16_t french_button_x = 140;
+const uint16_t french_button_y = 120;
+const uint16_t spanish_button_x = 340;
+const uint16_t spanish_button_y = 120;
+const uint16_t language_select_height = 100;
+const uint16_t language_select_width = 150;
+uint8_t key;
+uint8_t i = 0;
 
-void display_init() {
-    UART0_Init();
-    update_display();
+void default_grid() {
+    EVE_LIB_BeginCoProList();
+    EVE_CMD_DLSTART();
+    EVE_CLEAR_COLOR_RGB(229, 114, 0);
+    EVE_CLEAR(1,1,1);
+    EVE_CMD_SETROTATE(3);
+
+    if (g_current_language == french_page1) {
+        i = 0;
+        for (i; i < 9; i++) {
+            EVE_RECT_WITH_TEXT(x_buttons[i],y_buttons[i],height,width,french[i],i+1);
+        }
+        EVE_RECT_WITH_TEXT_COLOR(french_button_x,french_button_y,language_select_height,language_select_width,"French",10,255,255,0);
+        EVE_RECT_WITH_TEXT_COLOR(spanish_button_x,spanish_button_y,language_select_height,language_select_width,"Spanish",11,255,255,255);
+    }
+    else if (g_current_language == spanish){
+        i = 0;
+        for (i; i < 9; i++) {
+            EVE_RECT_WITH_TEXT(x_buttons[i],y_buttons[i],height,width,spanish_arr[i],i+1);
+        }
+        EVE_RECT_WITH_TEXT_COLOR(french_button_x,french_button_y,language_select_height,language_select_width,"French",10,255,255,255);
+        EVE_RECT_WITH_TEXT_COLOR(spanish_button_x,spanish_button_y,language_select_height,language_select_width,"Spanish",11,255,255,0);
+    }
+    EVE_DISPLAY();
+    EVE_CMD_SWAP();
+    EVE_LIB_EndCoProList();
+    EVE_LIB_AwaitCoProEmpty();
 }
 
-void update_display() {
-    UART0_OutString(clearscreen);
-    uint8_t i;
+void grid_with_touch() {
+    uint8_t selected = (uint8_t) g_key_press_info.pressed_key;
+    EVE_LIB_BeginCoProList();
+    EVE_CMD_DLSTART();
+    EVE_CLEAR_COLOR_RGB(229, 114, 0);
+    EVE_CLEAR(1,1,1);
+    EVE_CMD_SETROTATE(3);
+    i = 0;
+    if (g_current_language == french_page1) {
 
-    UART0_OutString("The current language: ");
-    if (g_current_language == spanish)
-    {
-        UART0_OutString("Spanish");
-    }
-    if (g_current_language == french_page1)
-    {
-        UART0_OutString("French: Page 1");
-    }
-    if (g_current_language == french_page2)
-    {
-        UART0_OutString("French: Page 2");
-    }
-    UART0_OutString("\n\r");
-
-    for (i = 0; i < 9; i++) {
-        char current_char;
-        UART0_OutString("Key ");
-        UART0_OutUDec(i+1);
-        UART0_OutString(": ");
-
-        if(g_current_language == spanish) {
-            current_char = g_spanish_mappings[i];
-            switch (current_char) {
-            case (A_RIGHT_ACCENT):
-                UART0_OutString("á");
-                break;
-            case (E_RIGHT_ACCENT):
-                UART0_OutString("é");
-                break;
-            case (I_RIGHT_ACCENT):
-                UART0_OutString("í");
-                break;
-            case (O_RIGHT_ACCENT):
-                UART0_OutString("ó");
-                break;
-            case (U_RIGHT_ACCENT):
-                UART0_OutString("ú");
-                break;
-            case (U_DIAERESIS):
-                UART0_OutString("ü");
-                break;
-            case (N_TENUTO):
-                UART0_OutString("ñ");
-                break;
-            case (QUESTION_MARK_INVERTED):
-                UART0_OutString("¿");
-                break;
-            case (EXCLAMATION_POINT_INVERTED):
-                UART0_OutString("¡");
-                break;
+        i = 0;
+        for (i; i < 9; i++) {
+            if (i != selected) {
+                EVE_RECT_WITH_TEXT(x_buttons[i],y_buttons[i],height,width,french[i],i+1);
+            }
+            if (i == selected) {
+                EVE_RECT(x_buttons[selected],y_buttons[selected],height,width,selected+1);
             }
         }
-
-        // Scale the mapping index if it is the second page.
-        uint8_t mapping_index = i;
-        if (g_current_language == french_page2)
-        {
-            mapping_index += 9;
-        }
-        if((g_current_language == french_page1) || (g_current_language == french_page2)) {
-            // Check to make sure the index has a mapping.
-            if (mapping_index < NUM_FRENCH_CHARACTERS)
-            {
-                current_char = g_french_mappings[mapping_index];
-                switch (current_char) {
-                case (A_LEFT_ACCENT):
-                    UART0_OutString("à");
-                    break;
-                case (A_CARET):
-                    UART0_OutString("â");
-                    break;
-                case (E_RIGHT_ACCENT):
-                    UART0_OutString("é");
-                    break;
-                case (E_LEFT_ACCENT):
-                    UART0_OutString("è");
-                    break;
-                case (E_CARET):
-                    UART0_OutString("ê");
-                    break;
-                case (E_DIAERESIS):
-                    UART0_OutString("ë");
-                    break;
-                case (I_DIAERESIS):
-                    UART0_OutString("ï");
-                    break;
-                case (I_CARET):
-                    UART0_OutString("î");
-                    break;
-                case (O_CARET):
-                    UART0_OutString("ô");
-                    break;
-                case (U_LEFT_ACCENT):
-                    UART0_OutString("ù");
-                    break;
-                case (U_CARET):
-                    UART0_OutString("û");
-                    break;
-                case (U_DIAERESIS):
-                    UART0_OutString("ü");
-                    break;
-                case (C_CEDILLA):
-                    UART0_OutString("ç");
-                    break;
-                case (Y_DIAERESIS):
-                    UART0_OutString("ÿ");
-                    break;
-                case (AE):
-                    UART0_OutString("æ");
-                    break;
-                case (OE):
-                    UART0_OutString("o");
-                    break;
-                default:
-                    UART0_OutString("_");
-                }
-            }
-            // Print a blank space for unused keys.
-            else
-            {
-                UART0_OutString("_");
-            }
-
-        }
-        if ((i == 2) || (i == 5) || (i == 8))
-        {
-          UART0_OutString("\n\r");
-        }
-        else
-        {
-            UART0_OutString(" | ");
-        }
-
+        EVE_RECT_WITH_TEXT_COLOR(french_button_x,french_button_y,language_select_height,language_select_width,"French",10,255,255,0);
+        EVE_RECT_WITH_TEXT_COLOR(spanish_button_x,spanish_button_y,language_select_height,language_select_width,"Spanish",11,255,255,255);
     }
+    else if (g_current_language == spanish){
+        i = 0;
+        for (i; i < 9; i++) {
+            if (i != selected) {
+                EVE_RECT_WITH_TEXT(x_buttons[i],y_buttons[i],height,width,spanish_arr[i],i+1);
+            }
+            if (i == selected) {
+                EVE_RECT(x_buttons[selected],y_buttons[selected],height,width,selected+1);
+            }
+        }
+        EVE_RECT_WITH_TEXT_COLOR(french_button_x,french_button_y,language_select_height,language_select_width,"French",10,255,255,255);
+        EVE_RECT_WITH_TEXT_COLOR(spanish_button_x,spanish_button_y,language_select_height,language_select_width,"Spanish",11,255,255,0);
+    }
+
+    EVE_DISPLAY();
+    EVE_CMD_SWAP();
+    EVE_LIB_EndCoProList();
+    EVE_LIB_AwaitCoProEmpty();
 }
 
+void wait_for_touch() {
+    default_grid();
+    uint8_t selected;
+    while ((selected = eve_read_tag_real(&key)) == 0);
+    g_key_press_info.pressed_key = selected;
+    g_key_press_info.b_key_press_detected = 1;
+}
 
+void handle_touch() {
+    grid_with_touch();
 
+    g_time_elapsed = 0;
+    while (eve_read_tag_real(&key) != 0) {
+        g_time_elapsed++;
+    }
+
+    if ((g_key_press_info.pressed_key == spanish_tab) || (g_key_press_info.pressed_key == spanish_tab)) {
+        g_key_press_info.action = change_page;
+    }
+    else if (g_time_elapsed > 300000) {
+        g_key_press_info.action = move_key;
+    }
+    else {
+        g_key_press_info.action = send_key;
+    }
+}
