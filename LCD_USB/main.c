@@ -62,10 +62,7 @@ void main (void)
     key_press_init();
     flash_memory_init();
 
-    uint32_t font_end;
-    EVE_Init();
-    font_end = eve_init_fonts();
-    eve_load_images(font_end);
+    display_init();
 
 
 
@@ -81,8 +78,8 @@ void main (void)
     while (1)
     {
         // ------------- Physical Keyboard --------------------------------
-        void wait_for_touch();
-        void handle_touch();
+        wait_for_touch();
+        handle_touch();
         // ------------- Physical Keyboard --------------------------------
 
         // VERIFY THAT THE USB DEVICE IS PROPERLY CONNECTED.

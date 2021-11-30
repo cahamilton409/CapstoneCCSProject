@@ -24,6 +24,13 @@ const uint16_t language_select_width = 150;
 uint8_t key;
 uint8_t i = 0;
 
+void display_init(void) {
+    uint32_t font_end;
+    EVE_Init();
+    font_end = eve_init_fonts();
+    eve_load_images(font_end);
+}
+
 void default_grid() {
     EVE_LIB_BeginCoProList();
     EVE_CMD_DLSTART();
