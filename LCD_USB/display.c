@@ -106,7 +106,7 @@ void wait_for_touch() {
     default_grid();
     uint8_t selected;
     while ((selected = eve_read_tag_real(&key)) == 0);
-    g_key_press_info.pressed_key = selected;
+    g_key_press_info.pressed_key = selected-1;
     g_key_press_info.b_key_press_detected = 1;
 }
 
