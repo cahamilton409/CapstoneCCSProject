@@ -50,6 +50,7 @@
 
 button_t key;
 status_fsm_t status_fsm;
+uint8_t connection_status;
 
 
 void main (void)
@@ -94,7 +95,8 @@ void main (void)
         // ------------- Physical Keyboard --------------------------------
 
         // VERIFY THAT THE USB DEVICE IS PROPERLY CONNECTED.
-        switch(USB_getConnectionState())
+        connection_status = USB_getConnectionState();
+        switch(connection_status)
         {
             // WWHEN THE USB DEVICE IS PROPERLY CONNECTED, HANDLE INPUTS
             case ST_ENUM_ACTIVE:
