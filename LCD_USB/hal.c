@@ -59,7 +59,7 @@
 */
 void clock_init(uint32_t mclkFreq)
 {
-    PMM_setVCore(PMM_CORE_LEVEL_3);
+    PMM_setVCore(PMM_CORE_LEVEL_2);
 
 	UCS_initClockSignal(
 	   UCS_FLLREF,

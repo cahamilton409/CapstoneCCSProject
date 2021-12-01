@@ -58,6 +58,7 @@
  * your own board.
  */
 #include "hal.h"
+#include "display.h"
 
 
 
@@ -78,19 +79,30 @@ void main (void)
     
      WDT_A_hold(WDT_A_BASE); // Stop watchdog timer
 
+
+
     // Minumum Vcore setting required for the USB API is PMM_CORE_LEVEL_2 .
     PMM_setVCore(PMM_CORE_LEVEL_2);
-    USBHAL_initPorts();           // Config GPIOS for low-power (output low)
+//    USBHAL_initPorts();           // Config GPIOS for low-power (output low)
     USBHAL_initClocks(8000000);   // Config clocks. MCLK=SMCLK=FLL=8MHz; ACLK=REFO=32kHz
+    display_init();
+
     USBHAL_initButtons();         // Init the two buttons
     Keyboard_init();       // Init keyboard report
     USB_setup(TRUE, TRUE); // Init USB & events; if a host is present, connect
+
+
+//    default_grid();
+
 
     __enable_interrupt();  // Enable global interrupts
 
     while (1)
     {
         
+//        wait_for_touch();
+//        handle_touch();
+
         switch(USB_getConnectionState())
         {
             // This case is executed while your device is enumerated on the

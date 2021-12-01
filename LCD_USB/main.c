@@ -51,13 +51,14 @@
 button_t key;
 status_fsm_t status_fsm;
 uint8_t connection_status;
+volatile uint32_t o;
 
 
 void main (void)
 {
     WDT_A_hold(WDT_A_BASE); // Stop watchdog timer
 
-    clock_init(25000000);   // Config clocks. MCLK=SMCLK=FLL=25MHz; ACLK=REFO=32kHz
+    clock_init(8000000);   // Config clocks. MCLK=SMCLK=FLL=25MHz; ACLK=REFO=32kHz
     audio_init();
     status_fsm_init(&status_fsm);
     key_press_init();
@@ -84,7 +85,9 @@ void main (void)
         // ------------- Physical Keyboard --------------------------------
 
         // VERIFY THAT THE USB DEVICE IS PROPERLY CONNECTED.
+        for (o = 0; o < 10000; o++);
         connection_status = USB_getConnectionState();
+//        connection_status = ST_ENUM_ACTIVE;
         switch(connection_status)
         {
             // WWHEN THE USB DEVICE IS PROPERLY CONNECTED, HANDLE INPUTS
