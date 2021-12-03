@@ -54,40 +54,38 @@ uint8_t connection_status;
 volatile uint32_t o;
 
 
+
 void main (void)
 {
     WDT_A_hold(WDT_A_BASE); // Stop watchdog timer
 
+
     clock_init(8000000);   // Config clocks. MCLK=SMCLK=FLL=25MHz; ACLK=REFO=32kHz
+    for (o = 0; o < 1000; o++);
+
     audio_init();
     status_fsm_init(&status_fsm);
     key_press_init();
     flash_memory_init();
-
     display_init();
-
-
-
-    // ------------- Physical Keyboard --------------------------------
-    //keypad_init();
-    // ------------- Physical Keyboard --------------------------------
 
     Keyboard_init();
     USB_setup(TRUE, TRUE);
 
+
     __enable_interrupt();
+
+
 
     while (1)
     {
-        // ------------- Physical Keyboard --------------------------------
+
         wait_for_touch();
         handle_touch();
-        // ------------- Physical Keyboard --------------------------------
 
         // VERIFY THAT THE USB DEVICE IS PROPERLY CONNECTED.
-        for (o = 0; o < 10000; o++);
+        for (o = 0; o < 1000; o++);
         connection_status = USB_getConnectionState();
-//        connection_status = ST_ENUM_ACTIVE;
         switch(connection_status)
         {
             // WWHEN THE USB DEVICE IS PROPERLY CONNECTED, HANDLE INPUTS
@@ -128,13 +126,18 @@ void main (void)
 
             // WHEN THE USB DEVICE IS NOT PROPERLY CONNECTED, DON'T HANDLE INPUTS.
             case ST_PHYS_DISCONNECTED:
+                break;
             case ST_ENUM_SUSPENDED:
+                break;
             case ST_PHYS_CONNECTED_NOENUM_SUSP:
                 __bis_SR_register(LPM3_bits + GIE);
                 _NOP();
                 break;
             case ST_ENUM_IN_PROGRESS:
-            default:;
+                break;
+            default:
+                for (o = 0; o < 1000; o++);
+                break;
         }
     }
 }

@@ -100,6 +100,13 @@ int8_t platform_calib_read(struct touchscreen_calibration *calib);
 /* Entry point to the example code */
 void eve_example(void);
 
+/* Rectangles */
+void EVE_CREATE_SQUARE(uint16_t x, uint16_t y, uint16_t height, const char* character, uint8_t tag);
+void EVE_RECT_WITH_TEXT(uint16_t x, uint16_t y, uint16_t height, uint16_t width, const char* character, uint8_t tag);
+void EVE_RECT_WITH_TEXT_COLOR(uint16_t x, uint16_t y, uint16_t height, uint16_t width, const char* character, uint8_t tag, uint8_t red, uint8_t green, uint8_t blue);
+void EVE_RECT(uint16_t x, uint16_t y, uint16_t height, uint16_t width, uint8_t tag);
+
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif /* __cplusplus */

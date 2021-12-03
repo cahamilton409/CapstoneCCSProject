@@ -53,6 +53,8 @@
 #include "HAL.h"
 
 #include "eve_example.h"
+#include "../include/HAL.h"
+
 
 /* CONSTANTS ***********************************************************************/
 

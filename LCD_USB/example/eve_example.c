@@ -138,8 +138,7 @@ void box_create(void) {
                 uint8_t i = 1;
 
                 if (language_select == 0) {
-                    i = 1;
-                    for (i; i < 10; i++) {
+                    for (i = 1; i < 10; i++) {
                         EVE_RECT_WITH_TEXT(x_buttons[i-1],y_buttons[i-1],height,width,french[i-1],i);
                     }
 
@@ -147,8 +146,7 @@ void box_create(void) {
                     EVE_RECT_WITH_TEXT_COLOR(spanish_button_x,spanish_button_y,language_select_height,language_select_width,"Spanish",11,255,255,255);
                 }
                 else {
-                    i = 1;
-                    for (i; i < 10; i++) {
+                    for (i = 1; i < 10; i++) {
                         EVE_RECT_WITH_TEXT(x_buttons[i-1],y_buttons[i-1],height,width,spanish[i-1],i);
                     }
                     EVE_RECT_WITH_TEXT_COLOR(french_button_x,french_button_y,language_select_height,language_select_width,"French",10,255,255,255);
@@ -177,8 +175,7 @@ void box_create(void) {
                 i = 1;
                 if (language_select == 0) {
 
-                    i = 1;
-                    for (i; i < 10; i++) {
+                    for (i = 1; i < 10; i++) {
                         if (i != selected) {
                             EVE_RECT_WITH_TEXT(x_buttons[i-1],y_buttons[i-1],height,width,french[i-1],i);
                         }
@@ -190,8 +187,7 @@ void box_create(void) {
                     EVE_RECT_WITH_TEXT_COLOR(spanish_button_x,spanish_button_y,language_select_height,language_select_width,"Spanish",11,255,255,255);
                 }
                 else {
-                    i = 1;
-                    for (i; i < 10; i++) {
+                    for (i = 1; i < 10; i++) {
                         if (i != selected) {
                             EVE_RECT_WITH_TEXT(x_buttons[i-1],y_buttons[i-1],height,width,spanish[i-1],i);
                         }
