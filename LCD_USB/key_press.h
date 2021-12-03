@@ -19,7 +19,7 @@
 #define E_RIGHT_ACCENT                  'x'
 #define I_RIGHT_ACCENT                  'c'
 #define O_RIGHT_ACCENT                  'v'
-#define U_RIGHT_ACCENT                  'b'
+#define U_RIGHT_ACCENT                  '/'
 #define U_DIAERESIS                     'n'
 #define N_TENUTO                        'm'
 #define QUESTION_MARK_INVERTED          ','
