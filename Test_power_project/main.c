@@ -100,8 +100,8 @@ void main (void)
     while (1)
     {
         
-//        wait_for_touch();
-//        handle_touch();
+        wait_for_touch();
+        handle_touch();
 
         switch(USB_getConnectionState())
         {
