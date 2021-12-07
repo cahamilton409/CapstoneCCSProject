@@ -13,7 +13,8 @@
 const uint16_t x_buttons[9] = {80,240,400,80,240,400,80,240,400};
 const uint16_t y_buttons[9] = {260,260,260,460,460,460,660,660,660};
 char * french[NUM_FRENCH_CHARACTERS] = {"a`<","a^","e`","e`<","e^","e..","i..","i^","o^", "u`<", "u^", "u..", "c?", "y..", "ae", "oe"};
-char * spanish_arr[NUM_SPANISH_CHARACTERS] = {"a`","e`","i`","o`","u`","u..","n~","?","!"};
+//char * spanish_arr[NUM_SPANISH_CHARACTERS] = {"a`","e`","i`","o`","u`","u..","n~","?","!"};
+char * spanish_arr[NUM_SPANISH_CHARACTERS] = {1,2,3,4,5,6,7,8,9};
 char * greek_arr[NUM_GREEK_CHARACTERS] = {"phi", "OMEGA", "DELTA", "lam", "mu", "pi", "theta", "SIGMA", "omega"};
 
 // Greek Symbol Mappings.
@@ -26,6 +27,7 @@ char * greek_arr[NUM_GREEK_CHARACTERS] = {"phi", "OMEGA", "DELTA", "lam", "mu", 
 #define THETA                           'j'
 #define SIGMA                           'k'
 #define OMEGA_LOWERCASE                 'l'
+
 const uint16_t height = 120;
 const uint16_t width = 120;
 const uint16_t spanish_button_x = 80;
@@ -42,8 +44,7 @@ uint8_t i = 0;
 void display_init(void) {
     uint32_t font_end;
     EVE_Init();
-    font_end = eve_init_fonts();
-    eve_load_images(font_end);
+    eve_init_fonts();
 }
 
 void default_grid() {
