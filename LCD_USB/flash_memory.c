@@ -10,22 +10,11 @@
 
 #include <msp430.h>
 
-uint8_t spanish_mappings[NUM_SPANISH_CHARACTERS] = {
-    QUESTION_MARK_INVERTED,
-    A_RIGHT_ACCENT,
-    E_RIGHT_ACCENT,
-    I_RIGHT_ACCENT,
-    O_RIGHT_ACCENT,
-    U_RIGHT_ACCENT,
-    U_DIAERESIS,
-    N_TENUTO,
-    EXCLAMATION_POINT_INVERTED};
-
 void flash_memory_init(void) {
     // LOAD MAPPINGS FROM MEMORY.
     load_mappings();
 
-    // IF THE MAPPINGS ARE INVALID, REVERT TO THE DEFAULT MAPPINGS.
+    // CHECK IF THE SPANISH MAPPINGS ARE VALID.
     uint8_t mapping_valid = 0;
     uint8_t i;
     uint8_t mapping_index;
@@ -41,6 +30,37 @@ void flash_memory_init(void) {
         }
     }
 
+    // CHECK IF THE FRENCH MAPPINGS ARE VALID.
+    if (mapping_valid == 1) {
+        for (mapping_index = 0; mapping_index < NUM_FRENCH_CHARACTERS; mapping_index++) {
+            mapping_valid = 0;
+            for (i = 0; i < NUM_FRENCH_CHARACTERS; i++) {
+                if (g_french_mappings[mapping_index] == g_french_characters[i]) {
+                    mapping_valid = 1;
+                }
+            }
+            if (mapping_valid == 0) {
+                break;
+            }
+        }
+    }
+
+    // CHECK IF THE GREEK MAPPINGS ARE VALID.
+    if (mapping_valid == 1) {
+        for (mapping_index = 0; mapping_index < NUM_GREEK_CHARACTERS; mapping_index++) {
+            mapping_valid = 0;
+            for (i = 0; i < NUM_GREEK_CHARACTERS; i++) {
+                if (g_greek_mappings[mapping_index] == g_greek_characters[i]) {
+                    mapping_valid = 1;
+                }
+            }
+            if (mapping_valid == 0) {
+                break;
+            }
+        }
+    }
+
+    // IF THE MAPPINGS ARE INVALID, LOAD THE DEFAULT MAPPINGS.
     if (mapping_valid == 0) {
         // Populate the language mappings.
         for (i = 0; i<NUM_SPANISH_CHARACTERS; i++) {
@@ -48,6 +68,9 @@ void flash_memory_init(void) {
         }
         for (i = 0; i<NUM_FRENCH_CHARACTERS; i++) {
             g_french_mappings[i] = g_french_characters[i];
+        }
+        for (i = 0; i<NUM_GREEK_CHARACTERS; i++) {
+            g_greek_mappings[i] = g_greek_characters[i];
         }
     }
 }
@@ -66,6 +89,11 @@ void save_mappings()
         copy_french_mappings[i] = g_french_mappings[i];
     }
 
+    uint8_t copy_greek_mappings[NUM_GREEK_CHARACTERS];
+    for (i = 0; i < NUM_GREEK_CHARACTERS; i++) {
+        copy_greek_mappings[i] = g_greek_mappings[i];
+    }
+
   char * Flash_ptr;                         // Initialize Flash pointer
   Flash_ptr = (char *) 0x1800;
   FCTL3 = FWKEY;                            // Clear Lock bit
@@ -82,6 +110,10 @@ void save_mappings()
       *Flash_ptr++ = copy_french_mappings[i];
   }
 
+  for (i = 0; i < NUM_SPANISH_CHARACTERS; i++) {
+      *Flash_ptr++ = copy_greek_mappings[i];
+  }
+
   FCTL1 = FWKEY;                            // Clear WRT bit
   FCTL3 = FWKEY+LOCK;                       // Set LOCK bit
 }
@@ -96,6 +128,9 @@ void load_mappings()
     }
     for (i = 0; i < NUM_FRENCH_CHARACTERS; i++) {
         g_french_mappings[i] = *Flash_ptr++;
+    }
+    for (i = 0; i < NUM_GREEK_CHARACTERS; i++) {
+        g_greek_mappings[i] = *Flash_ptr++;
     }
 
 }

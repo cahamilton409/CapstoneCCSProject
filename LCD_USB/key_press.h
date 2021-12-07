@@ -43,15 +43,29 @@
 #define AE                              'e'
 #define OE                              'r'
 
+// Greek Symbol Mappings.
+#define PHI                             'a'
+#define OMEGA_UPPERCASE                 's'
+#define DELTA                           'd'
+#define LAMBDA                          'f'
+#define MU                              'g'
+#define PI                              'h'
+#define THETA                           'j'
+#define SIGMA                           'k'
+#define OMEGA_LOWERCASE                 'l'
+
+
 #define NUM_SPANISH_CHARACTERS 9
 #define NUM_FRENCH_CHARACTERS 16
+#define NUM_GREEK_CHARACTERS 9
 
 
 
 typedef enum {
     spanish,
     french_page1,
-    french_page2
+    french_page2,
+    greek
 } language_t;
 
 typedef enum {
@@ -66,6 +80,7 @@ typedef enum {
     key9,
     spanish_tab,
     french_tab,
+    greek_tab,
     no_key
 } button_t;
 
@@ -77,21 +92,19 @@ typedef struct {
 
 extern const uint8_t g_spanish_characters [NUM_SPANISH_CHARACTERS];
 extern const uint8_t g_french_characters [NUM_FRENCH_CHARACTERS];
+extern const uint8_t g_greek_characters [NUM_GREEK_CHARACTERS];
 extern volatile uint8_t g_key_send_complete;
 extern volatile key_press_info_type g_key_press_info;
 extern volatile language_t g_current_language;
 
 extern volatile uint8_t g_spanish_mappings[NUM_SPANISH_CHARACTERS];
 extern volatile uint8_t g_french_mappings[NUM_FRENCH_CHARACTERS];
+extern volatile uint8_t g_greek_mappings[NUM_GREEK_CHARACTERS];
 
 void key_press_init(void);
 void change_current_language(button_t selected_tab);
 uint8_t get_key_from_button(button_t pressed_key);
 void special_key_press(uint8_t mapped_character);
 void move_key_to_front(button_t pressed_key);
-void update_language_led_indicators(void);
-//void shift_key_to_front(button_t key);
-
-
 
 #endif /* KEY_PRESS_H_ */

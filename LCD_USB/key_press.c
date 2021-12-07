@@ -45,23 +45,29 @@ const uint8_t g_french_characters [NUM_FRENCH_CHARACTERS] = {
     AE,
     OE};
 
-// TODO This variable will be associated with flash memory and may be moved.
+const uint8_t g_greek_characters [NUM_GREEK_CHARACTERS] = {
+    PHI,
+    OMEGA_UPPERCASE,
+    DELTA,
+    LAMBDA,
+    MU,
+    PI,
+    THETA,
+    SIGMA,
+    OMEGA_LOWERCASE};
+
+
 volatile language_t g_current_language;
 volatile uint8_t g_key_send_complete = TRUE;
 volatile key_press_info_type g_key_press_info;
 volatile uint8_t g_spanish_mappings[NUM_SPANISH_CHARACTERS];
 volatile uint8_t g_french_mappings[NUM_FRENCH_CHARACTERS];
+volatile uint8_t g_greek_mappings[NUM_GREEK_CHARACTERS];
 
 // Initializes the device for special key presses.
 void key_press_init() {
     g_key_press_info.b_key_press_detected = FALSE;
-    g_current_language = spanish; // This will need to be changed to be the last language used.
-
-    // Use LEDs for tracking the current language
-    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
-    GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN7);
-    update_language_led_indicators();
-
+    g_current_language = spanish;
 }
 
 // Changes the current language based on the button that was just pressed.
@@ -81,11 +87,13 @@ void change_current_language(button_t selected_tab) {
     {
         g_current_language = spanish;
     }
-    update_language_led_indicators();
+    else if (selected_tab == greek_tab)
+    {
+        g_current_language = greek;
+    }
 }
 
-// Get the characater that will to be sent based on which key was pressed.
-// TODO This function will likely interact with the stored flash memory, and may be moved.
+// Get the character that will to be sent based on which key was pressed.
 uint8_t get_key_from_button(button_t pressed_key) {
     if (g_current_language == spanish)
     {
@@ -104,6 +112,11 @@ uint8_t get_key_from_button(button_t pressed_key) {
             return g_french_mappings[pressed_key + 9];
         }
     }
+
+    if (g_current_language == greek) {
+        return g_greek_mappings[pressed_key];
+    }
+
     return 0;
 }
 
@@ -142,7 +155,6 @@ void move_key_to_front(button_t pressed_key) {
     uint8_t i;
     // SHIFT THE SPANISH MAPPINGS IF THE CURRENT LANGUAGE IS SPANISH.
     if (g_current_language == spanish) {
-
         // CREATE A COPY OF THE MAPPING.
         uint8_t old_mappings[NUM_SPANISH_CHARACTERS];
         for (i = 0; i < NUM_SPANISH_CHARACTERS; i++) {
@@ -181,27 +193,23 @@ void move_key_to_front(button_t pressed_key) {
         for (i = 0; i < key_index; i++) {
             g_french_mappings[i+1] = old_mappings[i];
         }
-
     }
+
+    // SHIFT THE GREEK MAPPINGS OF THE CURRENT LANGUAGE IS GREEK.
+    if (g_current_language == greek) {
+        // CREATE A COPY OF THE MAPPING.
+        uint8_t old_mappings[NUM_GREEK_CHARACTERS];
+        for (i = 0; i < NUM_GREEK_CHARACTERS; i++) {
+            old_mappings[i] = g_greek_mappings[i];
+        }
+
+        // SHIFT THE MAPPING BASED ON THE SELECTED KEY.
+        g_greek_mappings[0] = old_mappings[pressed_key];
+        button_t key_index;
+        for (key_index = key1; key_index < pressed_key; key_index++) {
+            g_greek_mappings[key_index+1] = old_mappings[key_index];
+        }
+    }
+
 
 }
-
-// Update the on-board LEDs to reflect the current language.
-void update_language_led_indicators(void){
-    if (g_current_language == spanish)
-    {
-        GPIO_setOutputHighOnPin(GPIO_PORT_P1, GPIO_PIN0);
-        GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN7);
-    }
-    else
-    {
-        GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN0);
-        GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN7);
-    }
-}
-
-//void shift_key_to_front(button_t key) {
-//
-//}
-
-

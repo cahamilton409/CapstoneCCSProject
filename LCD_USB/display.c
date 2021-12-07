@@ -11,15 +11,29 @@
 #include "keypad.h"
 
 const uint16_t x_buttons[9] = {80,240,400,80,240,400,80,240,400};
-const uint16_t y_buttons[9] = {300,300,300,500,500,500,700,700,700};
+const uint16_t y_buttons[9] = {260,260,260,460,460,460,660,660,660};
 char * french[NUM_FRENCH_CHARACTERS] = {"a`<","a^","e`","e`<","e^","e..","i..","i^","o^", "u`<", "u^", "u..", "c?", "y..", "ae", "oe"};
 char * spanish_arr[NUM_SPANISH_CHARACTERS] = {"a`","e`","i`","o`","u`","u..","n~","?","!"};
+char * greek_arr[NUM_GREEK_CHARACTERS] = {"phi", "OMEGA", "DELTA", "lam", "mu", "pi", "theta", "SIGMA", "omega"};
+
+// Greek Symbol Mappings.
+#define PHI                             'a'
+#define OMEGA_UPPERCASE                 's'
+#define DELTA                           'd'
+#define LAMBDA                          'f'
+#define MU                              'g'
+#define PI                              'h'
+#define THETA                           'j'
+#define SIGMA                           'k'
+#define OMEGA_LOWERCASE                 'l'
 const uint16_t height = 120;
 const uint16_t width = 120;
-const uint16_t french_button_x = 340;
-const uint16_t french_button_y = 120;
-const uint16_t spanish_button_x = 140;
-const uint16_t spanish_button_y = 120;
+const uint16_t spanish_button_x = 80;
+const uint16_t spanish_button_y = 50;
+const uint16_t french_button_x = 240;
+const uint16_t french_button_y = 50;
+const uint16_t greek_button_x = 400;
+const uint16_t greek_button_y = 50;
 const uint16_t language_select_height = 100;
 const uint16_t language_select_width = 150;
 uint8_t key;
@@ -78,7 +92,7 @@ void handle_touch() {
         g_time_elapsed++;
     }
 
-    if ((g_key_press_info.pressed_key == spanish_tab) || (g_key_press_info.pressed_key == french_tab)) {
+    if ((g_key_press_info.pressed_key == spanish_tab) || (g_key_press_info.pressed_key == french_tab) || (g_key_press_info.pressed_key == greek_tab)) {
         g_key_press_info.action = change_page;
     }
     else if (g_time_elapsed > 2500) {
@@ -103,6 +117,8 @@ void draw_keys(button_t selected_key) {
         }
         EVE_RECT_WITH_TEXT_COLOR(french_button_x,french_button_y,language_select_height,language_select_width,"French",11,255,255,255);
         EVE_RECT_WITH_TEXT_COLOR(spanish_button_x,spanish_button_y,language_select_height,language_select_width,"Spanish",10,255,255,0);
+        EVE_RECT_WITH_TEXT_COLOR(greek_button_x,greek_button_y,language_select_height,language_select_width,"Greek",12,255,255,255);
+
     }
 
     else if (g_current_language == french_page1) {
@@ -118,6 +134,8 @@ void draw_keys(button_t selected_key) {
         }
         EVE_RECT_WITH_TEXT_COLOR(french_button_x,french_button_y,language_select_height,language_select_width,"French 1",11,255,255,0);
         EVE_RECT_WITH_TEXT_COLOR(spanish_button_x,spanish_button_y,language_select_height,language_select_width,"Spanish",10,255,255,255);
+        EVE_RECT_WITH_TEXT_COLOR(greek_button_x,greek_button_y,language_select_height,language_select_width,"Greek",12,255,255,255);
+
     }
 
     else if (g_current_language == french_page2) {
@@ -133,7 +151,25 @@ void draw_keys(button_t selected_key) {
         }
         EVE_RECT_WITH_TEXT_COLOR(french_button_x,french_button_y,language_select_height,language_select_width,"French 2",11,255,255,0);
         EVE_RECT_WITH_TEXT_COLOR(spanish_button_x,spanish_button_y,language_select_height,language_select_width,"Spanish",10,255,255,255);
+        EVE_RECT_WITH_TEXT_COLOR(greek_button_x,greek_button_y,language_select_height,language_select_width,"Greek",12,255,255,255);
+
     }
+
+    if (g_current_language == greek){
+        for (i = 0; i < 9; i++) {
+            if (i != selected) {
+                uint8_t display_index = get_display_index(i);
+                EVE_RECT_WITH_TEXT(x_buttons[i],y_buttons[i],height,width,greek_arr[display_index],i+1);
+            }
+            if (i == selected) {
+                EVE_RECT(x_buttons[selected],y_buttons[selected],height,width,selected+1);
+            }
+        }
+        EVE_RECT_WITH_TEXT_COLOR(french_button_x,french_button_y,language_select_height,language_select_width,"French",11,255,255,255);
+        EVE_RECT_WITH_TEXT_COLOR(spanish_button_x,spanish_button_y,language_select_height,language_select_width,"Spanish",10,255,255,255);
+        EVE_RECT_WITH_TEXT_COLOR(greek_button_x,greek_button_y,language_select_height,language_select_width,"Greek",12,255,255,0);
+    }
+
 
 }
 
@@ -204,6 +240,35 @@ uint8_t get_display_index(uint8_t mapping_index) {
         }
     }
 
+    if (g_current_language == greek) {
+        char current_char = g_greek_mappings[mapping_index];
+        switch (current_char) {
+        case PHI:
+            return 0;
+        case OMEGA_UPPERCASE:
+            return 1;
+        case DELTA:
+            return 2;
+        case LAMBDA:
+            return 3;
+        case MU:
+            return 4;
+        case PI:
+            return 5;
+        case THETA:
+            return 6;
+        case SIGMA:
+            return 7;
+        case OMEGA_LOWERCASE:
+            return 8;
+        default:
+            return 0;
+        }
+    }
+
     return 0;
 }
+
+
+
 
