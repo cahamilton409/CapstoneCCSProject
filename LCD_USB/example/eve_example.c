@@ -83,7 +83,7 @@ void EVE_RECT_WITH_TEXT(uint16_t x, uint16_t y, uint16_t height, uint16_t width,
     EVE_VERTEX2F(x*16+width*8,y*16+height*8);
     EVE_VERTEX2F(x*16-width*8,y*16-height*8);
     EVE_COLOR_RGB(35, 45, 75);
-    EVE_CMD_TEXT(x,y, 30, EVE_OPT_CENTERX | EVE_OPT_CENTERY,character);
+    EVE_CMD_TEXT(x,y, 8, EVE_OPT_CENTERX | EVE_OPT_CENTERY,character);
 }
 
 void EVE_RECT_WITH_TEXT_COLOR(uint16_t x, uint16_t y, uint16_t height, uint16_t width, const char* character, uint8_t tag, uint8_t red, uint8_t green, uint8_t blue) {
