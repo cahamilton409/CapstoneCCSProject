@@ -81,7 +81,9 @@ typedef enum {
     spanish_tab,
     french_tab,
     greek_tab,
-    no_key
+    no_key,
+    next_key,
+    back_key
 } button_t;
 
 typedef struct {

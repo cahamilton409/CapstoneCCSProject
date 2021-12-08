@@ -1,57 +1,16 @@
-/**
- @file eve_fonts.c
- */
 /*
- * ============================================================================
- * History
- * =======
- * Nov 2019		Initial beta for FT81x and FT80x
- * Mar 2020		Updated beta - added BT815/6 commands
- * Mar 2021		Beta with BT817/8 support added
+ * display_fonts.c
  *
- *
- *
- *
- *
- * (C) Copyright,  Bridgetek Pte. Ltd.
- * ============================================================================
- *
- * This source code ("the Software") is provided by Bridgetek Pte Ltd
- * ("Bridgetek") subject to the licence terms set out
- * http://www.ftdichip.com/FTSourceCodeLicenceTerms.htm ("the Licence Terms").
- * You must read the Licence Terms before downloading or using the Software.
- * By installing or using the Software you agree to the Licence Terms. If you
- * do not agree to the Licence Terms then do not download or use the Software.
- *
- * Without prejudice to the Licence Terms, here is a summary of some of the key
- * terms of the Licence Terms (and in the event of any conflict between this
- * summary and the Licence Terms then the text of the Licence Terms will
- * prevail).
- *
- * The Software is provided "as is".
- * There are no warranties (or similar) in relation to the quality of the
- * Software. You use it at your own risk.
- * The Software should not be used in, or for, any medical device, system or
- * appliance. There are exclusions of Bridgetek liability for certain types of loss
- * such as: special loss or damage; incidental loss or damage; indirect or
- * consequential loss or damage; loss of income; loss of business; loss of
- * profits; loss of revenue; loss of contracts; business interruption; loss of
- * the use of money or anticipated savings; loss of information; loss of
- * opportunity; loss of goodwill or reputation; and/or loss of, damage to or
- * corruption of data.
- * There is a monetary cap on Bridgetek's liability.
- * The Software may have subsequently been amended by another user and then
- * distributed by that other user ("Adapted Software").  If so that user may
- * have additional licence terms that apply to those amendments. However, Bridgetek
- * has no liability in relation to those amendments.
- * ============================================================================
+ *  Created on: Dec 7, 2021
+ *      Author: Emory
  */
 
 #include <stdint.h>
-
-#include "EVE.h"
-
-#include "eve_example.h"
+#include "lib/eve/include/EVE.h"
+#include "lib/eve/include/HAL.h"
+#include "MCU.h"
+#include <string.h>
+#include "display_fonts.h"
 
 const uint32_t font0_offset = 1000; // Taken from commmand line
 
@@ -63,8 +22,8 @@ const uint8_t font0[] =
 /*10 characters have been converted */
 
 /* 148 Metric Block Begin +++  */
-/*('file properties ', 'format ', 'L1', ' stride ', 5, ' width ', 36, 'height', 58)*/ 
-{ 
+/*('file properties ', 'format ', 'L1', ' stride ', 5, ' width ', 36, 'height', 58)*/
+{
  0,20,20,20,19,20,20,14,18,21,19,21,21,20,21,29,29,25,25,22,22,23,23,13,15,26,24,25,25,24,23,27,31,20,20,12,20,20,21,21,19,6,25,22,12,26,24,25,25,25,28,31,21,20,22,22,23,24,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
  /* Format */
  17,0,0,0,
@@ -770,35 +729,35 @@ const uint8_t font0[] =
 
 uint32_t eve_init_fonts(void)
 {
-	const EVE_GPU_FONT_HEADER *font0_hdr = (const EVE_GPU_FONT_HEADER *)font0;
-	uint32_t font0_size = sizeof(font0);
+    const EVE_GPU_FONT_HEADER *font0_hdr = (const EVE_GPU_FONT_HEADER *)font0;
+    uint32_t font0_size = sizeof(font0);
 
-	EVE_LIB_WriteDataToRAMG(font0, font0_size, font0_offset);
+    EVE_LIB_WriteDataToRAMG(font0, font0_size, font0_offset);
 
-	EVE_LIB_BeginCoProList();
-	EVE_CMD_DLSTART();
-	EVE_CLEAR(1,1,1);
-	EVE_COLOR_RGB(255, 255, 255);
-	EVE_BEGIN(EVE_BEGIN_BITMAPS);
-	EVE_BITMAP_HANDLE(FONT_CUSTOM);
-	// Suggest to mask the bitmap source here with 0x3FFFFF to ensure that only the valid bits for addressing within RAM_G are set.
-	// BT81x now supports additional addressing where the source is in flash (see bitmap_source in the programmers guide)
-	// Note that bitmap_source in this framework uses a uint32_t and so if your font has a negative value for PointerToFontGraphicsData
-	// it will be required to mask the bits or to use a signed data type in your bitmap_source implementation. 
-	// Or to place the font in RAM_G such that the PointerToFontGraphicsData (also known as Raw Data Address in Decimal) is positive. 
-	// In this particular example, the PointerToFontGraphicsData will be ([location where we load the font in RAM_G] minus 142). 
-	// We load it at RAM_G + 1K to keep this positive (1K - 142 == 858). If we loaded the font at RAM_G + 0, it would have been -142.
-	EVE_BITMAP_SOURCE((font0_hdr->PointerToFontGraphicsData)&(0x3FFFFF));
-	EVE_BITMAP_LAYOUT(font0_hdr->FontBitmapFormat,
-			font0_hdr->FontLineStride, font0_hdr->FontHeightInPixels);
-	EVE_BITMAP_SIZE(EVE_FILTER_NEAREST, EVE_WRAP_BORDER, EVE_WRAP_BORDER,
-			font0_hdr->FontWidthInPixels,
-			font0_hdr->FontHeightInPixels);
-	EVE_CMD_SETFONT(FONT_CUSTOM, font0_offset);
-	EVE_END();
-	EVE_DISPLAY();
-	EVE_CMD_SWAP();
-	EVE_LIB_EndCoProList();
-	EVE_LIB_AwaitCoProEmpty();
-	return ((font0_size + font0_offset) + 16) & (~15);
+    EVE_LIB_BeginCoProList();
+    EVE_CMD_DLSTART();
+    EVE_CLEAR(1,1,1);
+    EVE_COLOR_RGB(255, 255, 255);
+    EVE_BEGIN(EVE_BEGIN_BITMAPS);
+    EVE_BITMAP_HANDLE(FONT_CUSTOM);
+    // Suggest to mask the bitmap source here with 0x3FFFFF to ensure that only the valid bits for addressing within RAM_G are set.
+    // BT81x now supports additional addressing where the source is in flash (see bitmap_source in the programmers guide)
+    // Note that bitmap_source in this framework uses a uint32_t and so if your font has a negative value for PointerToFontGraphicsData
+    // it will be required to mask the bits or to use a signed data type in your bitmap_source implementation.
+    // Or to place the font in RAM_G such that the PointerToFontGraphicsData (also known as Raw Data Address in Decimal) is positive.
+    // In this particular example, the PointerToFontGraphicsData will be ([location where we load the font in RAM_G] minus 142).
+    // We load it at RAM_G + 1K to keep this positive (1K - 142 == 858). If we loaded the font at RAM_G + 0, it would have been -142.
+    EVE_BITMAP_SOURCE((font0_hdr->PointerToFontGraphicsData)&(0x3FFFFF));
+    EVE_BITMAP_LAYOUT(font0_hdr->FontBitmapFormat,
+            font0_hdr->FontLineStride, font0_hdr->FontHeightInPixels);
+    EVE_BITMAP_SIZE(EVE_FILTER_NEAREST, EVE_WRAP_BORDER, EVE_WRAP_BORDER,
+            font0_hdr->FontWidthInPixels,
+            font0_hdr->FontHeightInPixels);
+    EVE_CMD_SETFONT2(FONT_CUSTOM, font0_offset, 0);
+    EVE_END();
+    EVE_DISPLAY();
+    EVE_CMD_SWAP();
+    EVE_LIB_EndCoProList();
+    EVE_LIB_AwaitCoProEmpty();
+    return ((font0_size + font0_offset) + 16) & (~15);
 }

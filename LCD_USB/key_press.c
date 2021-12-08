@@ -74,13 +74,26 @@ void key_press_init() {
 void change_current_language(button_t selected_tab) {
     if (selected_tab == french_tab)
     {
+        g_current_language = french_page1;
+    }
+    else if (selected_tab == next_key) {
         if (g_current_language == french_page1)
         {
             g_current_language = french_page2;
         }
         else
         {
-        g_current_language = french_page1;
+            g_current_language = french_page1;
+        }
+    }
+    else if (selected_tab == back_key) {
+        if (g_current_language == french_page2)
+        {
+            g_current_language = french_page1;
+        }
+        else
+        {
+            g_current_language = french_page2;
         }
     }
     else if (selected_tab == spanish_tab)
