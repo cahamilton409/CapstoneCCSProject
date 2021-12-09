@@ -59,15 +59,15 @@ void main (void)
 {
     WDT_A_hold(WDT_A_BASE); // Stop watchdog timer
 
-
     clock_init(8000000);   // Config clocks. MCLK=SMCLK=FLL=25MHz; ACLK=REFO=32kHz
     for (o = 0; o < 1000; o++);
 
-    audio_init();
+
     status_fsm_init(&status_fsm);
     key_press_init();
     flash_memory_init();
     display_init();
+    audio_init();
 
     Keyboard_init();
     USB_setup(TRUE, TRUE);
@@ -79,8 +79,9 @@ void main (void)
 
     while (1)
     {
-
+        stop_sound();
         wait_for_touch();
+        play_sound_();
         handle_touch();
 
         // VERIFY THAT THE USB DEVICE IS PROPERLY CONNECTED.

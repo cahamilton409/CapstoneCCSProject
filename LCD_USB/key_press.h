@@ -98,6 +98,7 @@ extern const uint8_t g_greek_characters [NUM_GREEK_CHARACTERS];
 extern volatile uint8_t g_key_send_complete;
 extern volatile key_press_info_type g_key_press_info;
 extern volatile language_t g_current_language;
+extern volatile uint8_t volume_level;
 
 extern volatile uint8_t g_spanish_mappings[NUM_SPANISH_CHARACTERS];
 extern volatile uint8_t g_french_mappings[NUM_FRENCH_CHARACTERS];

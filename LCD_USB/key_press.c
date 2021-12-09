@@ -12,7 +12,6 @@
 #include "driverlib.h"
 #include "USB_API/USB_Common/usb.h"
 #include "USB_app/keyboard.h"
-
 #include "flash_memory.h"
 
 //
@@ -63,6 +62,7 @@ volatile key_press_info_type g_key_press_info;
 volatile uint8_t g_spanish_mappings[NUM_SPANISH_CHARACTERS];
 volatile uint8_t g_french_mappings[NUM_FRENCH_CHARACTERS];
 volatile uint8_t g_greek_mappings[NUM_GREEK_CHARACTERS];
+volatile uint8_t volume_level;
 
 // Initializes the device for special key presses.
 void key_press_init() {

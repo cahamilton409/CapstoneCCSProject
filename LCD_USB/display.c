@@ -7,6 +7,7 @@
 #include "lib/eve/include/HAL.h"
 #include "display_API.h"
 #include "display_fonts.h"
+#include "audio.h"
 #include "MCU.h"
 #include <string.h>
 #include "keypad.h"
@@ -68,6 +69,7 @@ void grid_with_touch() {
     EVE_CLEAR(1,1,1);
     EVE_CMD_SETROTATE(3);
 
+
     draw_keys(g_key_press_info.pressed_key);
 
     EVE_DISPLAY();
@@ -79,7 +81,10 @@ void grid_with_touch() {
 void wait_for_touch() {
     default_grid();
     uint8_t selected;
-    while ((selected = eve_read_tag_real(&key)) == 0);
+    while ((selected = eve_read_tag_real(&key)) == 0) {
+        default_grid();
+        check_volume();
+    }
     g_key_press_info.pressed_key = (button_t) (selected-1);
     g_key_press_info.b_key_press_detected = 1;
 }
@@ -104,6 +109,8 @@ void handle_touch() {
 }
 
 void draw_keys(button_t selected_key) {
+    EVE_CMD_PROGRESS(360, 760, 100, 20, 2, volume_level, 3);
+    EVE_CMD_TEXT(410,735, 30, EVE_OPT_CENTERX | EVE_OPT_CENTERY,"Volume");
     uint8_t selected = selected_key;
     if (g_current_language == spanish){
         for (i = 0; i < 9; i++) {
@@ -121,6 +128,7 @@ void draw_keys(button_t selected_key) {
         EVE_LINE(160,100,40,35, 45, 75,0,480);
         EVE_LINE(160,100,40,35, 45, 75,-100,0);
         EVE_LINE(320,100,40,35, 45, 75,-100,0);
+        EVE_COLOR_RGB(255, 255, 255);
     }
 
     else if (g_current_language == french_page1) {
