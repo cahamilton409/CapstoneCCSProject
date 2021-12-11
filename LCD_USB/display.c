@@ -52,7 +52,7 @@ void default_grid() {
     EVE_CMD_DLSTART();
     EVE_CLEAR_COLOR_RGB(229, 114, 0);
     EVE_CLEAR(1,1,1);
-    EVE_CMD_SETROTATE(3);
+    EVE_CMD_SETROTATE(2);
 
     draw_keys(no_key);
 
@@ -67,7 +67,7 @@ void grid_with_touch() {
     EVE_CMD_DLSTART();
     EVE_CLEAR_COLOR_RGB(229, 114, 0);
     EVE_CLEAR(1,1,1);
-    EVE_CMD_SETROTATE(3);
+    EVE_CMD_SETROTATE(2);
 
 
     draw_keys(g_key_press_info.pressed_key);
