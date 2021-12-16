@@ -42,12 +42,14 @@ const uint16_t language_select_width = 160;
 uint8_t key;
 uint8_t i = 0;
 
-void display_init(void) {
+void display_init(void)
+{
     EVE_Init();
     eve_init_fonts();
 }
 
-void default_grid() {
+void default_grid()
+{
     EVE_LIB_BeginCoProList();
     EVE_CMD_DLSTART();
     EVE_CLEAR_COLOR_RGB(229, 114, 0);
@@ -62,7 +64,8 @@ void default_grid() {
     EVE_LIB_AwaitCoProEmpty();
 }
 
-void grid_with_touch() {
+void grid_with_touch()
+{
     EVE_LIB_BeginCoProList();
     EVE_CMD_DLSTART();
     EVE_CLEAR_COLOR_RGB(229, 114, 0);
@@ -78,7 +81,8 @@ void grid_with_touch() {
     EVE_LIB_AwaitCoProEmpty();
 }
 
-void wait_for_touch() {
+void wait_for_touch()
+{
     default_grid();
     uint8_t selected;
     while ((selected = eve_read_tag_real(&key)) == 0) {
@@ -88,7 +92,8 @@ void wait_for_touch() {
     g_key_press_info.pressed_key = (button_t) (selected-1);
 }
 
-void wait_for_release() {
+void wait_for_release()
+{
     grid_with_touch();
 
     g_time_elapsed = 0;
@@ -107,7 +112,8 @@ void wait_for_release() {
     }
 }
 
-void draw_keys(button_t selected_key) {
+void draw_keys(button_t selected_key)
+{
     EVE_CMD_PROGRESS(360, 760, 100, 20, 2, g_volume_level, 3);
     EVE_CMD_TEXT(410,735, 30, EVE_OPT_CENTERX | EVE_OPT_CENTERY,"Volume");
     uint8_t selected = selected_key;
@@ -115,18 +121,18 @@ void draw_keys(button_t selected_key) {
         for (i = 0; i < 9; i++) {
             if (i != selected) {
                 uint8_t display_index = get_display_index(i);
-                EVE_RECT_WITH_TEXT_BITMAP(x_buttons[i],y_buttons[i],height,width,spanish_arr[display_index],i+1);
+                eve_rect_with_text_bitmap(x_buttons[i],y_buttons[i],height,width,spanish_arr[display_index],i+1);
             }
             if (i == selected) {
-                EVE_RECT(x_buttons[selected],y_buttons[selected],height,width,selected+1);
+                eve_rect(x_buttons[selected],y_buttons[selected],height,width,selected+1);
             }
         }
-        EVE_RECT_WITH_TEXT_COLOR_EDGE(french_button_x,french_button_y,language_select_height,language_select_width,"French",11,255,255,255,1);
-        EVE_RECT_WITH_TEXT_COLOR_EDGE(spanish_button_x,spanish_button_y,language_select_height,language_select_width,"Spanish",10,229, 114, 0,1);
-        EVE_RECT_WITH_TEXT_COLOR_EDGE(greek_button_x,greek_button_y,language_select_height,language_select_width,"Greek",12,255,255,255,1);
-        EVE_LINE(160,100,40,35, 45, 75,0,480);
-        EVE_LINE(160,100,40,35, 45, 75,-100,0);
-        EVE_LINE(320,100,40,35, 45, 75,-100,0);
+        eve_rect_with_text_color_edge(french_button_x,french_button_y,language_select_height,language_select_width,"French",11,255,255,255,1);
+        eve_rect_with_text_color_edge(spanish_button_x,spanish_button_y,language_select_height,language_select_width,"Spanish",10,229, 114, 0,1);
+        eve_rect_with_text_color_edge(greek_button_x,greek_button_y,language_select_height,language_select_width,"Greek",12,255,255,255,1);
+        eve_line(160,100,40,35, 45, 75,0,480);
+        eve_line(160,100,40,35, 45, 75,-100,0);
+        eve_line(320,100,40,35, 45, 75,-100,0);
         EVE_COLOR_RGB(255, 255, 255);
     }
 
@@ -135,21 +141,21 @@ void draw_keys(button_t selected_key) {
         for (i = 0; i < 9; i++) {
             if (i != selected) {
                 uint8_t display_index = get_display_index(i);
-                EVE_RECT_WITH_TEXT_BITMAP(x_buttons[i],y_buttons[i],height,width,french[display_index],i+1);
+                eve_rect_with_text_bitmap(x_buttons[i],y_buttons[i],height,width,french[display_index],i+1);
             }
             if (i == selected) {
-                EVE_RECT(x_buttons[selected],y_buttons[selected],height,width,selected+1);
+                eve_rect(x_buttons[selected],y_buttons[selected],height,width,selected+1);
             }
         }
-        EVE_RECT_WITH_TEXT_COLOR_EDGE(french_button_x,french_button_y,language_select_height,language_select_width,"French",11,229, 114, 0,1);
-        EVE_RECT_WITH_TEXT_COLOR_EDGE(spanish_button_x,spanish_button_y,language_select_height,language_select_width,"Spanish",10,255,255,255,1);
-        EVE_RECT_WITH_TEXT_COLOR_EDGE(greek_button_x,greek_button_y,language_select_height,language_select_width,"Greek",12,255,255,255,1);
-        EVE_RECT_WITH_TEXT_COLOR_EDGE(240,700,75,75,">",14,255,255,255,13);
-        EVE_LINE(0,100,40,35, 45, 75,0,160);
-        EVE_LINE(320,100,40,35, 45, 75,0,160);
-        EVE_LINE(160,100,40,35, 45, 75,-100,0);
-        EVE_LINE(320,100,40,35, 45, 75,-100,0);
-        EVE_CREATE_SQUARE(240,700,100,' ',0);
+        eve_rect_with_text_color_edge(french_button_x,french_button_y,language_select_height,language_select_width,"French",11,229, 114, 0,1);
+        eve_rect_with_text_color_edge(spanish_button_x,spanish_button_y,language_select_height,language_select_width,"Spanish",10,255,255,255,1);
+        eve_rect_with_text_color_edge(greek_button_x,greek_button_y,language_select_height,language_select_width,"Greek",12,255,255,255,1);
+        eve_rect_with_text_color_edge(240,700,75,75,">",14,255,255,255,13);
+        eve_line(0,100,40,35, 45, 75,0,160);
+        eve_line(320,100,40,35, 45, 75,0,160);
+        eve_line(160,100,40,35, 45, 75,-100,0);
+        eve_line(320,100,40,35, 45, 75,-100,0);
+        eve_create_square(240,700,100,' ',0);
 
     }
 
@@ -158,21 +164,21 @@ void draw_keys(button_t selected_key) {
         for (i = 0; i < 7; i++) {
             if (i != selected) {
                 uint8_t display_index = get_display_index(i + 9);
-                EVE_RECT_WITH_TEXT_BITMAP(x_buttons[i],y_buttons[i],height,width,french[display_index],i+1);
+                eve_rect_with_text_bitmap(x_buttons[i],y_buttons[i],height,width,french[display_index],i+1);
             }
             if (i == selected) {
-                EVE_RECT(x_buttons[selected],y_buttons[selected],height,width,selected+1);
+                eve_rect(x_buttons[selected],y_buttons[selected],height,width,selected+1);
             }
         }
-        EVE_RECT_WITH_TEXT_COLOR_EDGE(french_button_x,french_button_y,language_select_height,language_select_width,"French",11,229, 114, 0,1);
-        EVE_RECT_WITH_TEXT_COLOR_EDGE(spanish_button_x,spanish_button_y,language_select_height,language_select_width,"Spanish",10,255,255,255,1);
-        EVE_RECT_WITH_TEXT_COLOR_EDGE(greek_button_x,greek_button_y,language_select_height,language_select_width,"Greek",12,255,255,255,1);
-        EVE_RECT_WITH_TEXT_COLOR_EDGE(240,700,75,75,"<",15,255,255,255,13);
-        EVE_LINE(0,100,40,35, 45, 75,0,160);
-        EVE_LINE(320,100,40,35, 45, 75,0,160);
-        EVE_LINE(160,100,40,35, 45, 75,-100,0);
-        EVE_LINE(320,100,40,35, 45, 75,-100,0);
-        EVE_CREATE_SQUARE(240,700,100,' ',0);
+        eve_rect_with_text_color_edge(french_button_x,french_button_y,language_select_height,language_select_width,"French",11,229, 114, 0,1);
+        eve_rect_with_text_color_edge(spanish_button_x,spanish_button_y,language_select_height,language_select_width,"Spanish",10,255,255,255,1);
+        eve_rect_with_text_color_edge(greek_button_x,greek_button_y,language_select_height,language_select_width,"Greek",12,255,255,255,1);
+        eve_rect_with_text_color_edge(240,700,75,75,"<",15,255,255,255,13);
+        eve_line(0,100,40,35, 45, 75,0,160);
+        eve_line(320,100,40,35, 45, 75,0,160);
+        eve_line(160,100,40,35, 45, 75,-100,0);
+        eve_line(320,100,40,35, 45, 75,-100,0);
+        eve_create_square(240,700,100,' ',0);
 
     }
 
@@ -180,24 +186,25 @@ void draw_keys(button_t selected_key) {
         for (i = 0; i < 9; i++) {
             if (i != selected) {
                 uint8_t display_index = get_display_index(i);
-                EVE_RECT_WITH_TEXT_BITMAP(x_buttons[i],y_buttons[i],height,width,greek_arr[display_index],i+1);
+                eve_rect_with_text_bitmap(x_buttons[i],y_buttons[i],height,width,greek_arr[display_index],i+1);
             }
             if (i == selected) {
-                EVE_RECT(x_buttons[selected],y_buttons[selected],height,width,selected+1);
+                eve_rect(x_buttons[selected],y_buttons[selected],height,width,selected+1);
             }
         }
-        EVE_RECT_WITH_TEXT_COLOR_EDGE(french_button_x,french_button_y,language_select_height,language_select_width,"French",11,255,255,255,1);
-        EVE_RECT_WITH_TEXT_COLOR_EDGE(spanish_button_x,spanish_button_y,language_select_height,language_select_width,"Spanish",10,255,255,255,1);
-        EVE_RECT_WITH_TEXT_COLOR_EDGE(greek_button_x,greek_button_y,language_select_height,language_select_width,"Greek",12,229, 114, 0,1);
-        EVE_LINE(0,100,40,35, 45, 75,0,320);
-        EVE_LINE(160,100,40,35, 45, 75,-100,0);
-        EVE_LINE(320,100,40,35, 45, 75,-100,0);
+        eve_rect_with_text_color_edge(french_button_x,french_button_y,language_select_height,language_select_width,"French",11,255,255,255,1);
+        eve_rect_with_text_color_edge(spanish_button_x,spanish_button_y,language_select_height,language_select_width,"Spanish",10,255,255,255,1);
+        eve_rect_with_text_color_edge(greek_button_x,greek_button_y,language_select_height,language_select_width,"Greek",12,229, 114, 0,1);
+        eve_line(0,100,40,35, 45, 75,0,320);
+        eve_line(160,100,40,35, 45, 75,-100,0);
+        eve_line(320,100,40,35, 45, 75,-100,0);
     }
 
 
 }
 
-uint8_t get_display_index(uint8_t mapping_index) {
+uint8_t get_display_index(uint8_t mapping_index)
+{
     if (g_current_language == spanish) {
         char current_char = g_spanish_mappings[mapping_index];
         switch (current_char) {
