@@ -43,9 +43,6 @@
 
 #include "hal.h"
 
-#define GPIO_ALL	GPIO_PIN0|GPIO_PIN1|GPIO_PIN2|GPIO_PIN3| \
-					GPIO_PIN4|GPIO_PIN5|GPIO_PIN6|GPIO_PIN7
-
 /* Configures the system clocks:
 * MCLK = SMCLK = DCO/FLL = mclkFreq (expected to be expressed in Hz)
 * ACLK = FLLref = REFO=32kHz
@@ -97,7 +94,7 @@ void __attribute__ ((interrupt(UNMI_VECTOR))) UNMI_ISR (void)
             __no_operation();
             break;
         case SYSUNIV_OFIFG:
-             UCS_clearFaultFlag(UCS_XT2OFFG);
+            UCS_clearFaultFlag(UCS_XT2OFFG);
             UCS_clearFaultFlag(UCS_DCOFFG);
             SFR_clearInterrupt(SFR_OSCILLATOR_FAULT_INTERRUPT);
             break;

@@ -3,11 +3,13 @@
 
 #include "key_press.h"
 
+extern volatile uint32_t g_time_elapsed;
+
 void display_init();
 void default_grid();
 void grid_with_touch();
 void wait_for_touch();
-void handle_touch();
+void wait_for_release();
 
 
 void draw_keys(button_t selected_key);

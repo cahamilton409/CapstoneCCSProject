@@ -1,6 +1,5 @@
 #include <display.h>
 #include "key_press.h"
-#include "UART0.h"
 #include <stdint.h>
 
 #include "lib/eve/include/EVE.h"
@@ -10,7 +9,8 @@
 #include "audio.h"
 #include "MCU.h"
 #include <string.h>
-#include "keypad.h"
+
+volatile uint32_t g_time_elapsed;
 
 const uint16_t x_buttons[9] = {80,240,400,80,240,400,80,240,400};
 const uint16_t y_buttons[9] = {220,220,220,380,380,380,540,540,540};
@@ -86,10 +86,9 @@ void wait_for_touch() {
         check_volume();
     }
     g_key_press_info.pressed_key = (button_t) (selected-1);
-    g_key_press_info.b_key_press_detected = 1;
 }
 
-void handle_touch() {
+void wait_for_release() {
     grid_with_touch();
 
     g_time_elapsed = 0;
@@ -109,7 +108,7 @@ void handle_touch() {
 }
 
 void draw_keys(button_t selected_key) {
-    EVE_CMD_PROGRESS(360, 760, 100, 20, 2, volume_level, 3);
+    EVE_CMD_PROGRESS(360, 760, 100, 20, 2, g_volume_level, 3);
     EVE_CMD_TEXT(410,735, 30, EVE_OPT_CENTERX | EVE_OPT_CENTERY,"Volume");
     uint8_t selected = selected_key;
     if (g_current_language == spanish){

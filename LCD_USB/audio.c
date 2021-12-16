@@ -11,11 +11,13 @@
 #include "driverlib.h"
 #include "msp430.h"
 #include "display.h"
-#include "UART0.h"
 
 #define TIMER_PERIOD 1000
-uint16_t duties[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
+volatile uint8_t g_volume_level;
+
+
+uint16_t duties[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 uint8_t aLastState; // Previous state (0 or 1) of Pin A
 uint8_t bLastState; // Previous state (0 or 1) of Pin B
 uint8_t aState; // Current state of Pin A (0 or 1)
@@ -35,9 +37,6 @@ void audio_init(void) {
     param.compareOutputMode = TIMER_A_OUTPUTMODE_RESET_SET;
 }
 
-void play_sound(status_fms_state_t state) {
-    return;
-}
 
 void play_sound_(void) {
     Timer_A_outputPWM(TIMER_A1_BASE, &param);
@@ -53,19 +52,19 @@ void check_volume(void) {
     bState = GPIO_getInputPinValue(GPIO_PORT_P4, GPIO_PIN0);
     if(aState == 1 && bState == 1){
         param.dutyCycle = 0;
-        volume_level = 0;
+        g_volume_level = 0;
     }
     else if(aState == 0 && bState == 1){
         param.dutyCycle = duties[4];
-        volume_level = 1;
+        g_volume_level = 1;
     }
     else if(aState == 0 && bState == 0){
         param.dutyCycle = duties[6];
-        volume_level = 2;
+        g_volume_level = 2;
     }
     else{ // 10
         param.dutyCycle = duties[9];
-        volume_level = 3;
+        g_volume_level = 3;
     }
 }
 

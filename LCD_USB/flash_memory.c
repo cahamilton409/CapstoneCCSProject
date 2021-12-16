@@ -1,135 +1,172 @@
-/*
- * FlashMem.c
- *
- *  Created on: Sep 28, 2021
- *      Author: Chris
- */
-
 #include "flash_memory.h"
 #include "key_press.h"
 
 #include <msp430.h>
 
-void flash_memory_init(void) {
-    // LOAD MAPPINGS FROM MEMORY.
+// Check if the flash memory data is stored correctly and load the key mappings if the
+// memory is valid. Otherwise, load the default language mappings.
+void flash_memory_init(void)
+{
+    // Load the mappings from memory.
     load_mappings();
 
-    // CHECK IF THE SPANISH MAPPINGS ARE VALID.
+    // Check if the Spanish mappings are valid..
     uint8_t mapping_valid = 0;
     uint8_t i;
     uint8_t mapping_index;
-    for (mapping_index = 0; mapping_index < NUM_SPANISH_CHARACTERS; mapping_index++) {
+    for (mapping_index = 0; mapping_index < NUM_SPANISH_CHARACTERS; mapping_index++)
+    {
         mapping_valid = 0;
-        for (i = 0; i < NUM_SPANISH_CHARACTERS; i++) {
-            if (g_spanish_mappings[mapping_index] == g_spanish_characters[i]) {
+        for (i = 0; i < NUM_SPANISH_CHARACTERS; i++)
+        {
+            if (g_spanish_mappings[mapping_index] == g_spanish_characters[i])
+            {
                 mapping_valid = 1;
             }
         }
-        if (mapping_valid == 0) {
+        if (mapping_valid == 0)
+        {
             break;
         }
     }
 
-    // CHECK IF THE FRENCH MAPPINGS ARE VALID.
-    if (mapping_valid == 1) {
-        for (mapping_index = 0; mapping_index < NUM_FRENCH_CHARACTERS; mapping_index++) {
+    // Check if the French mappings are valid..
+    if (mapping_valid == 1)
+    {
+        for (mapping_index = 0; mapping_index < NUM_FRENCH_CHARACTERS; mapping_index++)
+        {
             mapping_valid = 0;
-            for (i = 0; i < NUM_FRENCH_CHARACTERS; i++) {
-                if (g_french_mappings[mapping_index] == g_french_characters[i]) {
+            for (i = 0; i < NUM_FRENCH_CHARACTERS; i++)
+            {
+                if (g_french_mappings[mapping_index] == g_french_characters[i])
+                {
                     mapping_valid = 1;
                 }
             }
-            if (mapping_valid == 0) {
+            if (mapping_valid == 0)
+            {
                 break;
             }
         }
     }
 
-    // CHECK IF THE GREEK MAPPINGS ARE VALID.
-    if (mapping_valid == 1) {
-        for (mapping_index = 0; mapping_index < NUM_GREEK_CHARACTERS; mapping_index++) {
+    // Check if the Greek mappings are valid.
+    if (mapping_valid == 1)
+    {
+        for (mapping_index = 0; mapping_index < NUM_GREEK_CHARACTERS; mapping_index++)
+        {
             mapping_valid = 0;
-            for (i = 0; i < NUM_GREEK_CHARACTERS; i++) {
-                if (g_greek_mappings[mapping_index] == g_greek_characters[i]) {
+            for (i = 0; i < NUM_GREEK_CHARACTERS; i++)
+            {
+                if (g_greek_mappings[mapping_index] == g_greek_characters[i])
+                {
                     mapping_valid = 1;
                 }
             }
-            if (mapping_valid == 0) {
+            if (mapping_valid == 0)
+            {
                 break;
             }
         }
     }
 
-    // IF THE MAPPINGS ARE INVALID, LOAD THE DEFAULT MAPPINGS.
+    // If the mappings are invalid, load the default mappings instead.
     if (mapping_valid == 0) {
-        // Populate the language mappings.
-        for (i = 0; i<NUM_SPANISH_CHARACTERS; i++) {
+        for (i = 0; i<NUM_SPANISH_CHARACTERS; i++)
+        {
             g_spanish_mappings[i] = g_spanish_characters[i];
         }
-        for (i = 0; i<NUM_FRENCH_CHARACTERS; i++) {
+
+        for (i = 0; i<NUM_FRENCH_CHARACTERS; i++)
+        {
             g_french_mappings[i] = g_french_characters[i];
         }
-        for (i = 0; i<NUM_GREEK_CHARACTERS; i++) {
+
+        for (i = 0; i<NUM_GREEK_CHARACTERS; i++)
+        {
             g_greek_mappings[i] = g_greek_characters[i];
         }
     }
 }
 
+// Store the key position mappings in their storage space in flash memory.
 void save_mappings()
 {
     unsigned int i;
 
+    // Create a local copy of the mappings for each language.
+    // Using the volatile for writing to memory causes
+    // incorrect data to be stored in flash memory.
     uint8_t copy_spanish_mappings[NUM_SPANISH_CHARACTERS];
-    for (i = 0; i < NUM_SPANISH_CHARACTERS; i++) {
+    for (i = 0; i < NUM_SPANISH_CHARACTERS; i++)
+    {
         copy_spanish_mappings[i] = g_spanish_mappings[i];
     }
-
     uint8_t copy_french_mappings[NUM_FRENCH_CHARACTERS];
-    for (i = 0; i < NUM_FRENCH_CHARACTERS; i++) {
+    for (i = 0; i < NUM_FRENCH_CHARACTERS; i++)
+    {
         copy_french_mappings[i] = g_french_mappings[i];
     }
-
     uint8_t copy_greek_mappings[NUM_GREEK_CHARACTERS];
-    for (i = 0; i < NUM_GREEK_CHARACTERS; i++) {
+    for (i = 0; i < NUM_GREEK_CHARACTERS; i++)
+    {
         copy_greek_mappings[i] = g_greek_mappings[i];
     }
 
-  char * Flash_ptr;                         // Initialize Flash pointer
-  Flash_ptr = (char *) 0x1800;
-  FCTL3 = FWKEY;                            // Clear Lock bit
-  FCTL1 = FWKEY+ERASE;                      // Set Erase bit
-  *Flash_ptr = 0;                           // Dummy write to erase Flash seg
-  FCTL1 = FWKEY+WRT;                        // Set WRT bit for write operation
+    // Initialize a flash memory pointer for writing.
+    char * Flash_ptr;
+    Flash_ptr = (char *) 0x1800;
+    FCTL3 = FWKEY;
+    FCTL1 = FWKEY+ERASE;
+    *Flash_ptr = 0;
+    FCTL1 = FWKEY+WRT;
 
-  for (i = 0; i < NUM_SPANISH_CHARACTERS; i++)
-  {
-    *Flash_ptr++ = copy_spanish_mappings[i];                   // Write value to flash
-  }
+    // Write the Spanish mappings.
+    for (i = 0; i < NUM_SPANISH_CHARACTERS; i++)
+    {
+    *Flash_ptr++ = copy_spanish_mappings[i];
+    }
 
-  for (i = 0; i < NUM_FRENCH_CHARACTERS; i++) {
+    // Write the French mappings.
+    for (i = 0; i < NUM_FRENCH_CHARACTERS; i++)
+    {
       *Flash_ptr++ = copy_french_mappings[i];
-  }
+    }
 
-  for (i = 0; i < NUM_SPANISH_CHARACTERS; i++) {
+    // Write the Greek mappings.
+    for (i = 0; i < NUM_SPANISH_CHARACTERS; i++)
+    {
       *Flash_ptr++ = copy_greek_mappings[i];
-  }
+    }
 
-  FCTL1 = FWKEY;                            // Clear WRT bit
-  FCTL3 = FWKEY+LOCK;                       // Set LOCK bit
+    // Lock the memory after the write is complete.
+    FCTL1 = FWKEY;
+    FCTL3 = FWKEY+LOCK;
 }
 
+// Read the key position mappings from their storage space in memory.
 void load_mappings()
 {
+    // Initialize a flash memory for reading.
     unsigned int i;
-    char * Flash_ptr;                         // Initialize Flash pointer
+    char * Flash_ptr;
     Flash_ptr = (char *) MEMORY_LOCATION;
-    for (i = 0; i < NUM_SPANISH_CHARACTERS; i++) {
+
+    // Load the Spanish mappings.
+    for (i = 0; i < NUM_SPANISH_CHARACTERS; i++)
+    {
         g_spanish_mappings[i] = *Flash_ptr++;
     }
-    for (i = 0; i < NUM_FRENCH_CHARACTERS; i++) {
+
+    // Load the French mappings.
+    for (i = 0; i < NUM_FRENCH_CHARACTERS; i++)
+    {
         g_french_mappings[i] = *Flash_ptr++;
     }
-    for (i = 0; i < NUM_GREEK_CHARACTERS; i++) {
+
+    // Load the Greek mappings.
+    for (i = 0; i < NUM_GREEK_CHARACTERS; i++)
+    {
         g_greek_mappings[i] = *Flash_ptr++;
     }
 

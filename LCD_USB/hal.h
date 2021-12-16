@@ -35,14 +35,8 @@
  * Device and board specific pins need to be configured here
  *
  */
-#define BUTTON1_PORT	GPIO_PORT_P1
-#define BUTTON1_PIN		GPIO_PIN1
-#define BUTTON1_VECTOR	PORT1_VECTOR
-#define INTERRUPT_PIN   GPIO_PIN6
 
-#define BUTTON2_PORT	GPIO_PORT_P2
-#define BUTTON2_PIN		GPIO_PIN1
-#define BUTTON2_VECTOR	PORT2_VECTOR
+#define INTERRUPT_PIN   GPIO_PIN6
 
 void USBHAL_initPorts(void);
 void clock_init(uint32_t mclkFreq);

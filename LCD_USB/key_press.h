@@ -8,7 +8,6 @@
 #ifndef KEY_PRESS_H_
 #define KEY_PRESS_H_
 
-#include <status_fsm.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include "USB_app/keyboard.h"
@@ -28,7 +27,6 @@
 // French Symbol Mappings.
 #define A_LEFT_ACCENT                   '1'
 #define A_CARET                         '2'
-//#define E_RIGHT_ACCENT                '3'
 #define E_LEFT_ACCENT                   '4'
 #define E_CARET                         '5'
 #define E_DIAERESIS                     '6'
@@ -37,7 +35,6 @@
 #define O_CARET                         '9'
 #define U_LEFT_ACCENT                   '0'
 #define U_CARET                         '-'
-//#define U_DIAERESIS                   '='
 #define C_CEDILLA                       'q'
 #define Y_DIAERESIS                     'w'
 #define AE                              'e'
@@ -54,21 +51,23 @@
 #define SIGMA                           'k'
 #define OMEGA_LOWERCASE                 'l'
 
-
+// Character counts for each language used.
 #define NUM_SPANISH_CHARACTERS 9
 #define NUM_FRENCH_CHARACTERS 16
 #define NUM_GREEK_CHARACTERS 9
 
-
-
-typedef enum {
+// A type to represent the current language.
+typedef enum
+{
     spanish,
     french_page1,
     french_page2,
     greek
 } language_t;
 
-typedef enum {
+// A type to represent the different buttons available on the display.
+typedef enum
+{
     key1,
     key2,
     key3,
@@ -86,20 +85,27 @@ typedef enum {
     back_key
 } button_t;
 
-typedef struct {
-    button_t       pressed_key;            // Which key was pressed
-    status_fms_state_t     action;                // How the key was pressed
-    uint8_t      b_key_press_detected;      // If a key press has been detected
+// A type to represent the different types of actions that a user can perform
+typedef enum {
+    change_page,
+    send_key,
+    move_key
+} action_t;
+
+// A type containing structured information about a key press.
+typedef struct
+{
+    button_t pressed_key;        // Which key was pressed
+    action_t action;   // How the key was pressed
 } key_press_info_type;
 
 extern const uint8_t g_spanish_characters [NUM_SPANISH_CHARACTERS];
 extern const uint8_t g_french_characters [NUM_FRENCH_CHARACTERS];
 extern const uint8_t g_greek_characters [NUM_GREEK_CHARACTERS];
+
 extern volatile uint8_t g_key_send_complete;
 extern volatile key_press_info_type g_key_press_info;
 extern volatile language_t g_current_language;
-extern volatile uint8_t volume_level;
-
 extern volatile uint8_t g_spanish_mappings[NUM_SPANISH_CHARACTERS];
 extern volatile uint8_t g_french_mappings[NUM_FRENCH_CHARACTERS];
 extern volatile uint8_t g_greek_mappings[NUM_GREEK_CHARACTERS];

@@ -1,41 +1,7 @@
-/* --COPYRIGHT--,BSD
- * Copyright (c) 2016, Texas Instruments Incorporated
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * *  Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * *  Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * *  Neither the name of Texas Instruments Incorporated nor the names of
- *    its contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * --/COPYRIGHT--*/
-
 #include <audio.h>
 #include <display.h>
 #include <flash_memory.h>
 #include <key_press.h>
-#include <keypad.h>
-#include <status_fsm.h>
 #include <string.h>
 #include <hal.h>
 
@@ -43,102 +9,60 @@
 
 #include "USB_config/descriptors.h"
 #include "USB_API/USB_Common/device.h"
-#include "USB_API/USB_Common/usb.h"                  // USB-specific functions
+#include "USB_API/USB_Common/usb.h"
 #include "USB_API/USB_HID_API/UsbHid.h"
 #include "USB_app/keyboard.h"
 
-
-button_t key;
-status_fsm_t status_fsm;
-uint8_t connection_status;
-volatile uint32_t o;
-
-
-
 void main (void)
 {
-    WDT_A_hold(WDT_A_BASE); // Stop watchdog timer
+    // Stop the watchdog timer.
+    WDT_A_hold(WDT_A_BASE);
 
-    clock_init(8000000);   // Config clocks. MCLK=SMCLK=FLL=25MHz; ACLK=REFO=32kHz
-    for (o = 0; o < 1000; o++);
-
-
-    status_fsm_init(&status_fsm);
+    // Initialize the device.
+    clock_init(8000000);
     key_press_init();
     flash_memory_init();
     display_init();
     audio_init();
-
     Keyboard_init();
     USB_setup(TRUE, TRUE);
-
-
     __enable_interrupt();
-
-
 
     while (1)
     {
-        stop_sound();
+        // Wait for touchscreen input from the user.
         wait_for_touch();
         play_sound_();
-        handle_touch();
 
-        // VERIFY THAT THE USB DEVICE IS PROPERLY CONNECTED.
-        for (o = 0; o < 1000; o++);
-        connection_status = USB_getConnectionState();
-        switch(connection_status)
+        // Wait for the input to finish.
+        wait_for_release();
+        stop_sound();
+
+        // If the USB connection is active, handle the input.
+        uint8_t connection_status = USB_getConnectionState();
+        if (connection_status == ST_ENUM_ACTIVE)
         {
-            // WWHEN THE USB DEVICE IS PROPERLY CONNECTED, HANDLE INPUTS
-            case ST_ENUM_ACTIVE:
-                // IF THE DEVICE IS IDLE AND A KEY PRESS IS DETECTED, HANDLE IT ACCORDINGLY.
-                if (g_key_press_info.b_key_press_detected && (status_fsm.current_state == idle)) {
-                    // CHANGE THE PAGE IF THE USER SELECTED ANOTHER TAB.
-                    if (g_key_press_info.action == change_page)
-                    {
-                        status_fsm.current_state = change_page;
-                        play_sound(change_page);
-                        change_current_language(g_key_press_info.pressed_key);
-                        status_fsm.current_state = idle;
-                    }
+            action_t current_action = g_key_press_info.action;
+            // If the user selected a language tab, change the language accordingly.
+            if (current_action == change_page)
+            {
+                change_current_language(g_key_press_info.pressed_key);
+            }
 
-                    // TYPE A KEY IF THE USER PRESSED A KEY.
-                    else if (g_key_press_info.action == send_key)
-                    {
-                        status_fsm.current_state = send_key;
-                        play_sound(send_key);
-                        uint8_t selected_character = get_key_from_button(g_key_press_info.pressed_key);
-                        special_key_press(selected_character);
-                        status_fsm.current_state = idle;
-                    }
+            // If the user pressed a key, type the corresponding character.
+            else if (current_action == send_key)
+            {
+                uint8_t selected_character = get_key_from_button(g_key_press_info.pressed_key);
+                special_key_press(selected_character);
+            }
 
-                    // REARRANGE A KEY IF A USER HELD DOWN A KEY.
-                    else if (g_key_press_info.action == move_key)
-                    {
-                        status_fsm.current_state = move_key;
-                        play_sound(move_key);
-                        move_key_to_front(g_key_press_info.pressed_key);
-                        save_mappings();
-                        status_fsm.current_state = idle;
-                    }
-                }
-                g_key_press_info.b_key_press_detected = FALSE;
-                break;
-
-            // WHEN THE USB DEVICE IS NOT PROPERLY CONNECTED, DON'T HANDLE INPUTS.
-            case ST_PHYS_DISCONNECTED:
-                break;
-            case ST_ENUM_SUSPENDED:
-                break;
-            case ST_PHYS_CONNECTED_NOENUM_SUSP:
-                __bis_SR_register(LPM3_bits + GIE);
-                _NOP();
-                break;
-            case ST_ENUM_IN_PROGRESS:
-                break;
-            default:
-                for (o = 0; o < 1000; o++);
-                break;
+            // If the user held down a key, move the selected key to the front and
+            // store the new language mappings.
+            else if (current_action == move_key)
+            {
+                move_key_to_front(g_key_press_info.pressed_key);
+                save_mappings();
+            }
         }
     }
 }
