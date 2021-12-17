@@ -117,13 +117,17 @@ void draw_keys(button_t selected_key)
     EVE_CMD_PROGRESS(360, 760, 100, 20, 2, g_volume_level, 3);
     EVE_CMD_TEXT(410,735, 30, EVE_OPT_CENTERX | EVE_OPT_CENTERY,"Volume");
     uint8_t selected = selected_key;
-    if (g_current_language == spanish){
-        for (i = 0; i < 9; i++) {
-            if (i != selected) {
+    if (g_current_language == spanish)
+    {
+        for (i = 0; i < 9; i++)
+        {
+            if (i != selected)
+            {
                 uint8_t display_index = get_display_index(i);
                 eve_rect_with_text_bitmap(x_buttons[i],y_buttons[i],height,width,spanish_arr[display_index],i+1);
             }
-            if (i == selected) {
+            if (i == selected)
+            {
                 eve_rect(x_buttons[selected],y_buttons[selected],height,width,selected+1);
             }
         }
@@ -136,14 +140,17 @@ void draw_keys(button_t selected_key)
         EVE_COLOR_RGB(255, 255, 255);
     }
 
-    else if (g_current_language == french_page1) {
-
-        for (i = 0; i < 9; i++) {
-            if (i != selected) {
+    else if (g_current_language == french_page1)
+    {
+        for (i = 0; i < 9; i++)
+        {
+            if (i != selected)
+            {
                 uint8_t display_index = get_display_index(i);
                 eve_rect_with_text_bitmap(x_buttons[i],y_buttons[i],height,width,french[display_index],i+1);
             }
-            if (i == selected) {
+            if (i == selected)
+            {
                 eve_rect(x_buttons[selected],y_buttons[selected],height,width,selected+1);
             }
         }
@@ -159,14 +166,17 @@ void draw_keys(button_t selected_key)
 
     }
 
-    else if (g_current_language == french_page2) {
-
-        for (i = 0; i < 7; i++) {
-            if (i != selected) {
+    else if (g_current_language == french_page2)
+    {
+        for (i = 0; i < 7; i++)
+        {
+            if (i != selected)
+            {
                 uint8_t display_index = get_display_index(i + 9);
                 eve_rect_with_text_bitmap(x_buttons[i],y_buttons[i],height,width,french[display_index],i+1);
             }
-            if (i == selected) {
+            if (i == selected)
+            {
                 eve_rect(x_buttons[selected],y_buttons[selected],height,width,selected+1);
             }
         }
@@ -182,13 +192,17 @@ void draw_keys(button_t selected_key)
 
     }
 
-    if (g_current_language == greek){
-        for (i = 0; i < 9; i++) {
-            if (i != selected) {
+    if (g_current_language == greek)
+    {
+        for (i = 0; i < 9; i++)
+        {
+            if (i != selected)
+            {
                 uint8_t display_index = get_display_index(i);
                 eve_rect_with_text_bitmap(x_buttons[i],y_buttons[i],height,width,greek_arr[display_index],i+1);
             }
-            if (i == selected) {
+            if (i == selected)
+            {
                 eve_rect(x_buttons[selected],y_buttons[selected],height,width,selected+1);
             }
         }
@@ -205,7 +219,8 @@ void draw_keys(button_t selected_key)
 
 uint8_t get_display_index(uint8_t mapping_index)
 {
-    if (g_current_language == spanish) {
+    if (g_current_language == spanish)
+    {
         char current_char = g_spanish_mappings[mapping_index];
         switch (current_char) {
         case A_RIGHT_ACCENT:
@@ -231,7 +246,8 @@ uint8_t get_display_index(uint8_t mapping_index)
         }
     }
 
-    if ((g_current_language == french_page1) || (g_current_language == french_page2)) {
+    if ((g_current_language == french_page1) || (g_current_language == french_page2))
+    {
         char current_char = g_french_mappings[mapping_index];
         switch (current_char) {
         case A_LEFT_ACCENT:
@@ -271,7 +287,8 @@ uint8_t get_display_index(uint8_t mapping_index)
         }
     }
 
-    if (g_current_language == greek) {
+    if (g_current_language == greek)
+    {
         char current_char = g_greek_mappings[mapping_index];
         switch (current_char) {
         case PHI:

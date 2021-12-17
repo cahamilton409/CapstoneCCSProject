@@ -25,7 +25,8 @@ uint8_t bState; // Current state of Pin B (0 or 1)
 uint8_t volume; // A test variable to track whether turning the encoder increases or decreases this value
 extern Timer_A_outputPWMParam param = {0};
 
-void audio_init(void) {
+void audio_init(void)
+{
     GPIO_setAsInputPin(GPIO_PORT_P4, GPIO_PIN0); // P4.0 is an input
     GPIO_setAsInputPin(GPIO_PORT_P3, GPIO_PIN7); // P3.7 is an input
     GPIO_setAsPeripheralModuleFunctionOutputPin(GPIO_PORT_P2, GPIO_PIN0); // P2.0 is a buzzer output
@@ -38,31 +39,38 @@ void audio_init(void) {
 }
 
 
-void play_sound_(void) {
+void play_sound(void)
+{
     Timer_A_outputPWM(TIMER_A1_BASE, &param);
 }
 
-void stop_sound(void) {
+void stop_sound(void)
+{
     Timer_A_stop(TIMER_A1_BASE);
 
 }
 
-void check_volume(void) {
+void check_volume(void)
+{
     aState = GPIO_getInputPinValue(GPIO_PORT_P3, GPIO_PIN7);
     bState = GPIO_getInputPinValue(GPIO_PORT_P4, GPIO_PIN0);
-    if(aState == 1 && bState == 1){
+    if(aState == 1 && bState == 1)
+    {
         param.dutyCycle = 0;
         g_volume_level = 0;
     }
-    else if(aState == 0 && bState == 1){
+    else if(aState == 0 && bState == 1)
+    {
         param.dutyCycle = duties[4];
         g_volume_level = 1;
     }
-    else if(aState == 0 && bState == 0){
+    else if(aState == 0 && bState == 0)
+    {
         param.dutyCycle = duties[6];
         g_volume_level = 2;
     }
-    else{ // 10
+    else
+    { // 10
         param.dutyCycle = duties[9];
         g_volume_level = 3;
     }

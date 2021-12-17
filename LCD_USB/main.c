@@ -32,7 +32,7 @@ void main (void)
     {
         // Wait for touchscreen input from the user.
         wait_for_touch();
-        play_sound_();
+        play_sound();
 
         // Wait for the input to finish.
         wait_for_release();

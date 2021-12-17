@@ -13,7 +13,7 @@
 extern volatile uint8_t g_volume_level;
 
 void audio_init(void);
-void play_sound_(void);
+void play_sound(void);
 void stop_sound(void);
 void check_volume(void);
 
